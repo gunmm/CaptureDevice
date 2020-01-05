@@ -235,8 +235,8 @@
             break;
         case LFLiveVideoQuality_High3:{
             configuration.sessionPreset = LFCaptureSessionPreset720x1280;
-            configuration.videoFrameRate = 30;
-            configuration.videoMaxFrameRate = 30;
+            configuration.videoFrameRate = 60;
+            configuration.videoMaxFrameRate = 60;
             configuration.videoMinFrameRate = 15;
             configuration.videoBitRate = 1200 * 1000;
             configuration.videoMaxBitRate = 1440 * 1000;

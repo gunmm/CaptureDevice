@@ -69,6 +69,7 @@
 
 @property (nonatomic, assign) BOOL isBStatus;
 
+@property (nonatomic, strong) CIContext *ciContext;
 
 /// 音视频是否对齐
 @property (nonatomic, assign) BOOL AVAlignment;
@@ -80,6 +81,13 @@
 @end
 
 @implementation SampleHandler
+
+- (CIContext *)ciContext {
+    if (!_ciContext) {
+        _ciContext = [CIContext contextWithOptions:nil];
+    }
+    return _ciContext;
+}
 
 - (CVPixelBufferPoolRef)pixelBufferPool {
     CGFloat width = self.videoHeight;
@@ -142,7 +150,7 @@
         _videoConfiguration = [LFLiveVideoConfiguration defaultConfigurationForQuality:LFLiveVideoQuality_High3 outputImageOrientation:self.encoderOrientation width:self.videoWidth height:self.videoHeight];
     }
     return _videoConfiguration;
-
+    
 }
 
 - (id<LFAudioEncoding>)audioEncoder {
@@ -206,7 +214,7 @@
     self.userDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.gunmm.CaptureDeviceProject"];
     self.rotateQueue = dispatch_queue_create("rotateQueue", DISPATCH_QUEUE_SERIAL);
     self.audioQueue = dispatch_queue_create("audioQueue", DISPATCH_QUEUE_SERIAL);
-
+    
     [self.socket start];
     self.relativeTimestamps = 0;
     
@@ -306,9 +314,9 @@
                     } else {
                         CMAudioFormatDescriptionRef audioFormatDes =  (CMAudioFormatDescriptionRef)CMSampleBufferGetFormatDescription(sampleBuffer);
                         AudioStreamBasicDescription inAudioStreamBasicDescription = *(CMAudioFormatDescriptionGetStreamBasicDescription(audioFormatDes));
-//                        NSLog(@"***************** %lu", pcmLength);
-
-//                        mFormatFlags: 0xc
+                        //                        NSLog(@"***************** %lu", pcmLength);
+                        
+                        //                        mFormatFlags: 0xc
                         if (weakSelf.isBStatus) {
                             [self.audioEncoder setCustomInputFormat:inAudioStreamBasicDescription];
                             NSData *data = [[NSData alloc] initWithBytes:pcmData length:pcmLength];
@@ -438,61 +446,123 @@
     }
     self.videoWidth = width;
     self.videoHeight = height;
-    if (!_hasPixelBufferPool) {
-        _hasPixelBufferPool = YES;
-        [self pixelBufferPool];
-    }
-    MTIImageOrientation imageOrientation = MTIImageOrientationUp;
-    if (self.rotateOrientation == kCGImagePropertyOrientationUp) {
-        if (realWidthScale == 1 && realHeightScale == 1) {
-            [self.videoEncoder encodeVideoData:pixelBuffer timeStamp:(CACurrentMediaTime()*1000)];
+    if (YES) {
+        if (!_hasPixelBufferPool) {
+            _hasPixelBufferPool = YES;
+            [self pixelBufferPool];
+        }
+    
+        MTIImageOrientation imageOrientation = MTIImageOrientationUp;
+        if (self.rotateOrientation == kCGImagePropertyOrientationUp) {
+            if (realWidthScale == 1 && realHeightScale == 1) {
+                [self.videoEncoder encodeVideoData:pixelBuffer timeStamp:(CACurrentMediaTime()*1000)];
+            } else {
+                MTIImage *inputImage = [[MTIImage alloc] initWithCVPixelBuffer:pixelBuffer alphaType:MTIAlphaTypeAlphaIsOne];
+                inputImage = [[MTIUnaryImageRenderingFilter imageByProcessingImage:inputImage orientation:imageOrientation parameters:@{} outputPixelFormat:MTIPixelFormatUnspecified outputImageSize:CGSizeMake(width, height)] imageWithCachePolicy:inputImage.cachePolicy];
+                
+                CVPixelBufferRef outputPixelBuffer = nil;
+                CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, _pixelBufferPool, &outputPixelBuffer);
+                
+                NSError *error;
+                [self.context renderImage:inputImage toCVPixelBuffer:outputPixelBuffer error:&error];
+                
+                if (!error) {
+                    CMSampleBufferRef outputSampleBuffer = SampleBufferByReplacingImageBuffer(buffer, outputPixelBuffer);
+                    CVPixelBufferRef pushPixelBuffer = CMSampleBufferGetImageBuffer(outputSampleBuffer);
+                    CVPixelBufferRelease(outputPixelBuffer);
+                    [self.videoEncoder encodeVideoData:pushPixelBuffer timeStamp:(CACurrentMediaTime()*1000)];
+                    CFRelease(outputSampleBuffer);
+                } else {
+                    NSLog(@"-------------error");
+                }
+            }
         } else {
+            if (self.rotateOrientation == kCGImagePropertyOrientationLeft) {
+                imageOrientation = MTIImageOrientationRight;
+            } else {
+                imageOrientation = MTIImageOrientationLeft;
+            }
             MTIImage *inputImage = [[MTIImage alloc] initWithCVPixelBuffer:pixelBuffer alphaType:MTIAlphaTypeAlphaIsOne];
-            inputImage = [[MTIUnaryImageRenderingFilter imageByProcessingImage:inputImage orientation:imageOrientation parameters:@{} outputPixelFormat:MTIPixelFormatUnspecified outputImageSize:CGSizeMake(width, height)] imageWithCachePolicy:inputImage.cachePolicy];
-            
+            inputImage = [[MTIUnaryImageRenderingFilter imageByProcessingImage:inputImage orientation:imageOrientation parameters:@{} outputPixelFormat:MTIPixelFormatUnspecified outputImageSize:CGSizeMake(height, width)] imageWithCachePolicy:inputImage.cachePolicy];
             CVPixelBufferRef outputPixelBuffer = nil;
-            CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, _pixelBufferPool, &outputPixelBuffer);
+            CVReturn ok1 = kCVReturnSuccess;
             
+            ok1 = CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, _pixelBufferPool, &outputPixelBuffer);
+            ok1 = CVPixelBufferPoolCreatePixelBufferWithAuxAttributes(nil, _pixelBufferPool, <#CFDictionaryRef  _Nullable auxAttributes#>, &outputPixelBuffer)
+            
+            
+            ok1 = CVPixelBufferPoolCreatePixelBufferWithAuxAttributes(nil,
+                                                                                     pool,
+                                                                                     [
+                                                                                       kCVPixelBufferPoolAllocationThresholdKey: 3
+                                                                                       ] as NSDictionary, //
+            CVPixelBufferRelease(outputPixelBuffer);
+            if (ok1 == kCVReturnWouldExceedAllocationThreshold) {
+                NSLog(@"-------------------");
+                return;
+            }
             NSError *error;
-            [self.context renderImage:inputImage toCVPixelBuffer:outputPixelBuffer error:&error];
+//            CVPixelBufferLockBaseAddress(outputPixelBuffer, 0);
+//            [self.context renderImage:inputImage toCVPixelBuffer:outputPixelBuffer error:&error];
+//            CVPixelBufferUnlockBaseAddress(outputPixelBuffer, 0);
             
             if (!error) {
-                CMSampleBufferRef outputSampleBuffer = SampleBufferByReplacingImageBuffer(buffer, outputPixelBuffer);
-                CVPixelBufferRef pushPixelBuffer = CMSampleBufferGetImageBuffer(outputSampleBuffer);
-                CVPixelBufferRelease(outputPixelBuffer);
-                [self.videoEncoder encodeVideoData:pushPixelBuffer timeStamp:(CACurrentMediaTime()*1000)];
-                CFRelease(outputSampleBuffer);
+//                CMSampleBufferRef outputSampleBuffer = SampleBufferByReplacingImageBuffer(buffer, outputPixelBuffer);
+//                CVPixelBufferRef pushPixelBuffer = CMSampleBufferGetImageBuffer(outputSampleBuffer);
+//                CVPixelBufferRelease(outputPixelBuffer);
+//                [self.videoEncoder encodeVideoData:pushPixelBuffer timeStamp:(CACurrentMediaTime()*1000)];
+//                CFRelease(outputSampleBuffer);
             } else {
                 NSLog(@"-------------error");
             }
         }
-    } else {
-        if (self.rotateOrientation == kCGImagePropertyOrientationLeft) {
-            imageOrientation = MTIImageOrientationRight;
-        } else {
-            imageOrientation = MTIImageOrientationLeft;
+    }
+    else {
+        if (!_hasPixelBufferPool) {
+            _hasPixelBufferPool = YES;
+            [self pixelBufferPool];
         }
-        MTIImage *inputImage = [[MTIImage alloc] initWithCVPixelBuffer:pixelBuffer alphaType:MTIAlphaTypeAlphaIsOne];
-        inputImage = [[MTIUnaryImageRenderingFilter imageByProcessingImage:inputImage orientation:imageOrientation parameters:@{} outputPixelFormat:MTIPixelFormatUnspecified outputImageSize:CGSizeMake(height, width)] imageWithCachePolicy:inputImage.cachePolicy];
-        
-        CVPixelBufferRef outputPixelBuffer = nil;
-        CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, _pixelBufferPool, &outputPixelBuffer);
-        
-        NSError *error;
-        [self.context renderImage:inputImage toCVPixelBuffer:outputPixelBuffer error:&error];
-        
-        if (!error) {
-            CMSampleBufferRef outputSampleBuffer = SampleBufferByReplacingImageBuffer(buffer, outputPixelBuffer);
+        CIImage *ciimage = [CIImage imageWithCVPixelBuffer:pixelBuffer];
+        if (self.rotateOrientation == kCGImagePropertyOrientationUp) {
+            if (realWidthScale == 1 && realHeightScale == 1) {
+                [self.videoEncoder encodeVideoData:pixelBuffer timeStamp:(CACurrentMediaTime()*1000)];
+            } else {
+                CIImage *newImage = [ciimage imageByApplyingTransform:CGAffineTransformMakeScale(realWidthScale, realHeightScale)];
+                CVPixelBufferRef newPixcelBuffer = nil;
+                CVPixelBufferCreate(kCFAllocatorDefault, width, height, kCVPixelFormatType_32BGRA, nil, &newPixcelBuffer);
+                if (newPixcelBuffer && newImage) {
+                    [self.ciContext render:newImage toCVPixelBuffer:newPixcelBuffer];
+                    CMSampleBufferRef outputSampleBuffer = SampleBufferByReplacingImageBuffer(buffer, newPixcelBuffer);
+                    CVPixelBufferRef pushPixelBuffer = CMSampleBufferGetImageBuffer(outputSampleBuffer);
+                    CVPixelBufferRelease(newPixcelBuffer);
+                    [self.videoEncoder encodeVideoData:pushPixelBuffer timeStamp:(CACurrentMediaTime()*1000)];
+                    CFRelease(outputSampleBuffer);
+                } else {
+                    CVPixelBufferRelease(newPixcelBuffer);
+                }
+            }
+        } else {
+            // 旋转的方法
+            CIImage *wImage = [ciimage imageByApplyingCGOrientation:self.rotateOrientation];
+            CIImage *newImage = [wImage imageByApplyingTransform:CGAffineTransformMakeScale(realWidthScale, realHeightScale)];
+            
+            CVPixelBufferRef newPixcelBuffer = nil;
+            CVReturn ok1 = kCVReturnSuccess;
+            ok1 = CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, _pixelBufferPool, &newPixcelBuffer);
+            if (ok1 == kCVReturnWouldExceedAllocationThreshold) {
+                NSLog(@"-------------------");
+                return;
+            }
+            CVPixelBufferLockBaseAddress(newPixcelBuffer, 0);
+            [self.ciContext render:newImage toCVPixelBuffer:newPixcelBuffer];
+            CVPixelBufferUnlockBaseAddress(newPixcelBuffer, 0);
+            CMSampleBufferRef outputSampleBuffer = SampleBufferByReplacingImageBuffer(buffer, newPixcelBuffer);
             CVPixelBufferRef pushPixelBuffer = CMSampleBufferGetImageBuffer(outputSampleBuffer);
-            CVPixelBufferRelease(outputPixelBuffer);
+            CVPixelBufferRelease(newPixcelBuffer);
             [self.videoEncoder encodeVideoData:pushPixelBuffer timeStamp:(CACurrentMediaTime()*1000)];
             CFRelease(outputSampleBuffer);
-        } else {
-            NSLog(@"-------------error");
         }
-        
     }
-    
 }
 
 - (BOOL)AVAlignment{
@@ -518,9 +588,9 @@
 
 #pragma mark -- LFVideoEncodingDelegate
 - (void)videoEncoder:(nullable id<LFVideoEncoding>)encoder videoFrame:(nullable LFVideoFrame *)frame {
-//    if ([self getMemoryUsage] > 30) {
-//        return;
-//    }
+    //    if ([self getMemoryUsage] > 30) {
+    //        return;
+    //    }
     if (self.canUpload) {
         if (self.hasCaptureAudio == YES) {
             if(frame.isKeyFrame) self.hasKeyFrameVideo = YES;
@@ -533,9 +603,9 @@
 }
 #pragma mark -- LFAudioEncodingDelegate
 - (void)audioEncoder:(nullable id<LFAudioEncoding>)encoder audioFrame:(nullable LFAudioFrame *)frame {
-//    if ([self getMemoryUsage] > 30) {
-//        return;
-//    }
+    //    if ([self getMemoryUsage] > 30) {
+    //        return;
+    //    }
     if (self.canUpload){
         self.hasCaptureAudio = YES;
         if(self.AVAlignment){
@@ -574,11 +644,11 @@
     if (self.canUpload) {
         NSUInteger videoBitRate = [self.videoEncoder videoBitRate];
         if (status == LFLiveBuffferDecline) {
-//            if (videoBitRate < _videoConfiguration.videoMaxBitRate) {
-//                videoBitRate = videoBitRate + 50 * 1000;
-//                [self.videoEncoder setVideoBitRate:videoBitRate];
-//                NSLog(@"Increase bitrate %@", @(videoBitRate));
-//            }
+            //            if (videoBitRate < _videoConfiguration.videoMaxBitRate) {
+            //                videoBitRate = videoBitRate + 50 * 1000;
+            //                [self.videoEncoder setVideoBitRate:videoBitRate];
+            //                NSLog(@"Increase bitrate %@", @(videoBitRate));
+            //            }
         } else {
             if (videoBitRate > self.videoConfiguration.videoMinBitRate) {
                 videoBitRate = videoBitRate - 100 * 1000;
