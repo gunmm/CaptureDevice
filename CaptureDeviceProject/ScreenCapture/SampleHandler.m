@@ -97,13 +97,15 @@
         height = self.videoHeight;
     }
     CVPixelBufferPoolCreate(kCFAllocatorDefault,
-                            (__bridge CFDictionaryRef)@{(id)kCVPixelBufferPoolMinimumBufferCountKey: @(30)},
+                            nil,
                             (__bridge CFDictionaryRef)@{(id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32BGRA),
                                                         (id)kCVPixelBufferWidthKey: @(width),
                                                         (id)kCVPixelBufferHeightKey: @(height),
+                                                        (id)kCVPixelFormatOpenGLESCompatibility: @(true),
                                                         (id)kCVPixelBufferIOSurfacePropertiesKey: @{}},
                             &_pixelBufferPool);
     return _pixelBufferPool;
+    
 }
 
 #pragma mark -- getter
@@ -254,7 +256,7 @@
     switch (sampleBufferType) {
         case RPSampleBufferTypeVideo:
         {
-            if ([self getMemoryUsage] > 35) {
+            if ([self getMemoryUsage] > 40) {
                 return;
             }
             if (self.canUpload) {
@@ -428,7 +430,7 @@
     CGFloat heightScale = height/1280.0;
     CGFloat realWidthScale = 1;
     CGFloat realHeightScale = 1;
-
+    
     if (widthScale > 1 || heightScale > 1) {
         if (widthScale < heightScale) {
             realHeightScale = 1280.0/height;
@@ -446,12 +448,12 @@
     }
     self.videoWidth = width;
     self.videoHeight = height;
-    if (YES) {
+    if (NO) {
         if (!_hasPixelBufferPool) {
             _hasPixelBufferPool = YES;
             [self pixelBufferPool];
         }
-    
+        
         MTIImageOrientation imageOrientation = MTIImageOrientationUp;
         if (self.rotateOrientation == kCGImagePropertyOrientationUp) {
             if (realWidthScale == 1 && realHeightScale == 1) {
@@ -486,32 +488,30 @@
             inputImage = [[MTIUnaryImageRenderingFilter imageByProcessingImage:inputImage orientation:imageOrientation parameters:@{} outputPixelFormat:MTIPixelFormatUnspecified outputImageSize:CGSizeMake(height, width)] imageWithCachePolicy:inputImage.cachePolicy];
             CVPixelBufferRef outputPixelBuffer = nil;
             CVReturn ok1 = kCVReturnSuccess;
-            
-            ok1 = CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, _pixelBufferPool, &outputPixelBuffer);
-            ok1 = CVPixelBufferPoolCreatePixelBufferWithAuxAttributes(nil, _pixelBufferPool, <#CFDictionaryRef  _Nullable auxAttributes#>, &outputPixelBuffer)
-            
-            
-            ok1 = CVPixelBufferPoolCreatePixelBufferWithAuxAttributes(nil,
-                                                                                     pool,
-                                                                                     [
-                                                                                       kCVPixelBufferPoolAllocationThresholdKey: 3
-                                                                                       ] as NSDictionary, //
-            CVPixelBufferRelease(outputPixelBuffer);
+            @autoreleasepool {
+                ok1 = CVPixelBufferPoolCreatePixelBufferWithAuxAttributes(nil,
+                                                                          _pixelBufferPool,
+                                                                          (__bridge CFDictionaryRef)@{
+                                                                              (__bridge id)kCVPixelBufferPoolAllocationThresholdKey: @3
+                                                                          },
+                                                                          &outputPixelBuffer
+                                                                          );
+            }
             if (ok1 == kCVReturnWouldExceedAllocationThreshold) {
                 NSLog(@"-------------------");
                 return;
             }
             NSError *error;
-//            CVPixelBufferLockBaseAddress(outputPixelBuffer, 0);
-//            [self.context renderImage:inputImage toCVPixelBuffer:outputPixelBuffer error:&error];
-//            CVPixelBufferUnlockBaseAddress(outputPixelBuffer, 0);
+            CVPixelBufferLockBaseAddress(outputPixelBuffer, 0);
+            [self.context renderImage:inputImage toCVPixelBuffer:outputPixelBuffer error:&error];
+            CVPixelBufferUnlockBaseAddress(outputPixelBuffer, 0);
             
             if (!error) {
-//                CMSampleBufferRef outputSampleBuffer = SampleBufferByReplacingImageBuffer(buffer, outputPixelBuffer);
-//                CVPixelBufferRef pushPixelBuffer = CMSampleBufferGetImageBuffer(outputSampleBuffer);
-//                CVPixelBufferRelease(outputPixelBuffer);
-//                [self.videoEncoder encodeVideoData:pushPixelBuffer timeStamp:(CACurrentMediaTime()*1000)];
-//                CFRelease(outputSampleBuffer);
+                CMSampleBufferRef outputSampleBuffer = SampleBufferByReplacingImageBuffer(buffer, outputPixelBuffer);
+                CVPixelBufferRef pushPixelBuffer = CMSampleBufferGetImageBuffer(outputSampleBuffer);
+                CVPixelBufferRelease(outputPixelBuffer);
+                [self.videoEncoder encodeVideoData:pushPixelBuffer timeStamp:(CACurrentMediaTime()*1000)];
+                CFRelease(outputSampleBuffer);
             } else {
                 NSLog(@"-------------error");
             }
@@ -529,17 +529,31 @@
             } else {
                 CIImage *newImage = [ciimage imageByApplyingTransform:CGAffineTransformMakeScale(realWidthScale, realHeightScale)];
                 CVPixelBufferRef newPixcelBuffer = nil;
-                CVPixelBufferCreate(kCFAllocatorDefault, width, height, kCVPixelFormatType_32BGRA, nil, &newPixcelBuffer);
-                if (newPixcelBuffer && newImage) {
-                    [self.ciContext render:newImage toCVPixelBuffer:newPixcelBuffer];
-                    CMSampleBufferRef outputSampleBuffer = SampleBufferByReplacingImageBuffer(buffer, newPixcelBuffer);
-                    CVPixelBufferRef pushPixelBuffer = CMSampleBufferGetImageBuffer(outputSampleBuffer);
-                    CVPixelBufferRelease(newPixcelBuffer);
-                    [self.videoEncoder encodeVideoData:pushPixelBuffer timeStamp:(CACurrentMediaTime()*1000)];
-                    CFRelease(outputSampleBuffer);
-                } else {
-                    CVPixelBufferRelease(newPixcelBuffer);
+                CVReturn ok1 = kCVReturnSuccess;
+                ok1 = kCVReturnSuccess;
+                @autoreleasepool {
+                    ok1 = CVPixelBufferPoolCreatePixelBufferWithAuxAttributes(nil,
+                                                                              _pixelBufferPool,
+                                                                              (__bridge CFDictionaryRef)@{
+                                                                                  (__bridge id)kCVPixelBufferPoolAllocationThresholdKey: @3
+                                                                              },
+                                                                              &newPixcelBuffer
+                                                                              );
                 }
+                
+                if (ok1 == kCVReturnWouldExceedAllocationThreshold) {
+                    NSLog(@"-------------------");
+                    return;
+                }
+                CVPixelBufferLockBaseAddress(newPixcelBuffer, 0);
+                [self.ciContext render:newImage toCVPixelBuffer:newPixcelBuffer];
+                CVPixelBufferUnlockBaseAddress(newPixcelBuffer, 0);
+                
+                CMSampleBufferRef outputSampleBuffer = SampleBufferByReplacingImageBuffer(buffer, newPixcelBuffer);
+                CVPixelBufferRef pushPixelBuffer = CMSampleBufferGetImageBuffer(outputSampleBuffer);
+                CVPixelBufferRelease(newPixcelBuffer);
+                [self.videoEncoder encodeVideoData:pushPixelBuffer timeStamp:(CACurrentMediaTime()*1000)];
+                CFRelease(outputSampleBuffer);
             }
         } else {
             // 旋转的方法
@@ -548,7 +562,17 @@
             
             CVPixelBufferRef newPixcelBuffer = nil;
             CVReturn ok1 = kCVReturnSuccess;
-            ok1 = CVPixelBufferPoolCreatePixelBuffer(kCFAllocatorDefault, _pixelBufferPool, &newPixcelBuffer);
+            ok1 = kCVReturnSuccess;
+            @autoreleasepool {
+                ok1 = CVPixelBufferPoolCreatePixelBufferWithAuxAttributes(nil,
+                                                                          _pixelBufferPool,
+                                                                          (__bridge CFDictionaryRef)@{
+                                                                              (__bridge id)kCVPixelBufferPoolAllocationThresholdKey: @3
+                                                                          },
+                                                                          &newPixcelBuffer
+                                                                          );
+            }
+            
             if (ok1 == kCVReturnWouldExceedAllocationThreshold) {
                 NSLog(@"-------------------");
                 return;
@@ -556,6 +580,7 @@
             CVPixelBufferLockBaseAddress(newPixcelBuffer, 0);
             [self.ciContext render:newImage toCVPixelBuffer:newPixcelBuffer];
             CVPixelBufferUnlockBaseAddress(newPixcelBuffer, 0);
+            
             CMSampleBufferRef outputSampleBuffer = SampleBufferByReplacingImageBuffer(buffer, newPixcelBuffer);
             CVPixelBufferRef pushPixelBuffer = CMSampleBufferGetImageBuffer(outputSampleBuffer);
             CVPixelBufferRelease(newPixcelBuffer);
@@ -644,11 +669,11 @@
     if (self.canUpload) {
         NSUInteger videoBitRate = [self.videoEncoder videoBitRate];
         if (status == LFLiveBuffferDecline) {
-            //            if (videoBitRate < _videoConfiguration.videoMaxBitRate) {
-            //                videoBitRate = videoBitRate + 50 * 1000;
-            //                [self.videoEncoder setVideoBitRate:videoBitRate];
-            //                NSLog(@"Increase bitrate %@", @(videoBitRate));
-            //            }
+            if (videoBitRate < _videoConfiguration.videoMaxBitRate) {
+                videoBitRate = videoBitRate + 50 * 1000;
+                [self.videoEncoder setVideoBitRate:videoBitRate];
+                NSLog(@"Increase bitrate %@", @(videoBitRate));
+            }
         } else {
             if (videoBitRate > self.videoConfiguration.videoMinBitRate) {
                 videoBitRate = videoBitRate - 100 * 1000;
