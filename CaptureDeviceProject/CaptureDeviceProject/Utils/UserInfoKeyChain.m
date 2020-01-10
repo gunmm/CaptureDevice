@@ -18,12 +18,12 @@
     item = [YYKeychain selectOneItem:item error:&error];
     if (error || !item) {
         UserInfoKeyChain *userInfoKeyChain = [[UserInfoKeyChain alloc] init];
-        userInfoKeyChain.isCreate = @"1";
+        userInfoKeyChain.isCreate = @"";
 
         NSString *deviceId = [[NSUserDefaults standardUserDefaults] objectForKey:@"deviceId"];
         if (deviceId.length == 0) {
             deviceId = [[NSUUID UUID] UUIDString];
-            userInfoKeyChain.isCreate = @"";
+            userInfoKeyChain.isCreate = @"1";
         }
         NSDate *dateNow = [NSDate date];//现在时间
         long downLoadTimeLong = [dateNow timeIntervalSince1970];
