@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MixAudioManager : NSObject
 
-@property (nonatomic, assign) id<MixAudioManagerDelegate> delegate;
+@property (nonatomic, weak) id<MixAudioManagerDelegate> delegate;
 
 @property (nonatomic, assign) AudioStreamBasicDescription micInputFormat;
 @property (nonatomic, assign) AudioStreamBasicDescription appInputFormat;
