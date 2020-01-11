@@ -275,6 +275,7 @@
             }
             if (self.canUpload) {
                 CFRetain(sampleBuffer);
+                __weak typeof(self) weakSelf = self;
                 dispatch_async(self.audioQueue, ^{
                     //从samplebuffer中获取blockbuffer
                     CMBlockBufferRef blockBuffer = CMSampleBufferGetDataBuffer(sampleBuffer);
@@ -290,8 +291,8 @@
                         CMAudioFormatDescriptionRef audioFormatDes =  (CMAudioFormatDescriptionRef)CMSampleBufferGetFormatDescription(sampleBuffer);
                         AudioStreamBasicDescription inAudioStreamBasicDescription = *(CMAudioFormatDescriptionGetStreamBasicDescription(audioFormatDes));
                         inAudioStreamBasicDescription.mFormatFlags = 0xe;
-                        self.mixAudioManager.appInputFormat = inAudioStreamBasicDescription;
-                        [self.mixAudioManager sendAppBufferList:[[NSData alloc] initWithBytes:pcmData length:pcmLength] timeStamp:(CACurrentMediaTime()*1000)];
+                        weakSelf.mixAudioManager.appInputFormat = inAudioStreamBasicDescription;
+                        [weakSelf.mixAudioManager sendAppBufferList:[[NSData alloc] initWithBytes:pcmData length:pcmLength] timeStamp:(CACurrentMediaTime()*1000)];
                     }
                     CFRelease(sampleBuffer);
                 });
@@ -354,12 +355,14 @@
                             Float64 currentTime = CMTimeGetSeconds(CMClockMakeHostTimeFromSystemUnits(CACurrentMediaTime()));
                             
                             int64_t pts = (int64_t)((currentTime - 100) * 1000);
-                            [self.audioEncoder2 encodeAudioWithSourceBuffer:buffers.mBuffers[0].mData sourceBufferSize:buffers.mBuffers[0].mDataByteSize pts:pts completeHandler:^(LFAudioFrame * _Nonnull frame) {
-                                if (weakSelf.isBStatus) {
+                            __strong typeof(self) strongSelf = weakSelf;
+
+                            [weakSelf.audioEncoder2 encodeAudioWithSourceBuffer:buffers.mBuffers[0].mData sourceBufferSize:buffers.mBuffers[0].mDataByteSize pts:pts completeHandler:^(LFAudioFrame * _Nonnull frame) {
+                                if (strongSelf.isBStatus) {
                                     NSData *data = [[NSData alloc] initWithBytes:pcmData length:pcmLength];
-                                    [weakSelf.audioEncoder encodeAudioData:data timeStamp:(CACurrentMediaTime()*1000)];
+                                    [strongSelf.audioEncoder encodeAudioData:data timeStamp:(CACurrentMediaTime()*1000)];
                                 } else {
-                                    [weakSelf.mixAudioManager sendMicBufferList:frame.data timeStamp:(CACurrentMediaTime()*1000)];
+                                    [strongSelf.mixAudioManager sendMicBufferList:frame.data timeStamp:(CACurrentMediaTime()*1000)];
                                 }
                             }];
                         }
@@ -669,11 +672,11 @@
     if (self.canUpload) {
         NSUInteger videoBitRate = [self.videoEncoder videoBitRate];
         if (status == LFLiveBuffferDecline) {
-            if (videoBitRate < _videoConfiguration.videoMaxBitRate) {
-                videoBitRate = videoBitRate + 50 * 1000;
-                [self.videoEncoder setVideoBitRate:videoBitRate];
-                NSLog(@"Increase bitrate %@", @(videoBitRate));
-            }
+//            if (videoBitRate < _videoConfiguration.videoMaxBitRate) {
+//                videoBitRate = videoBitRate + 50 * 1000;
+//                [self.videoEncoder setVideoBitRate:videoBitRate];
+//                NSLog(@"Increase bitrate %@", @(videoBitRate));
+//            }
         } else {
             if (videoBitRate > self.videoConfiguration.videoMinBitRate) {
                 videoBitRate = videoBitRate - 100 * 1000;
