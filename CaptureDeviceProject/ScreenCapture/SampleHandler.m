@@ -78,6 +78,9 @@
 /// 当前是否采集到了关键帧
 @property (nonatomic, assign) BOOL hasKeyFrameVideo;
 
+@property (nonatomic, strong) UIImage *waterMarkImage;
+
+
 @end
 
 @implementation SampleHandler
@@ -232,6 +235,23 @@
     if (@available(iOS 13.0, *)) {
         _isBStatus = NO;
     }
+//    CGRect rect=CGRectMake(0.0f, 0.0f, 100.0f, 100.0f);
+//    UIGraphicsBeginImageContext(rect.size);
+//    CGContextRef context2 = UIGraphicsGetCurrentContext();
+//    CGContextSetFillColorWithColor(context2, [[UIColor redColor] CGColor]);
+//    CGContextFillRect(context2, rect);
+//    UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    NSData *imageData = [self.userDefaults objectForKey:@"waterMarkImage"];
+//    _waterMarkImage = [uii];
+    
+    NSURL *groupURL = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:@"group.gunmm.CaptureDeviceProject"];
+    NSURL *fileURL = [groupURL URLByAppendingPathComponent:@"waterMarkView.png"];
+    NSData *waterMarkData = [NSData dataWithContentsOfURL:fileURL];
+    _waterMarkImage = [UIImage imageWithData:waterMarkData];
+    NSLog(@"");
+
+   
 }
 
 - (void)broadcastPaused {
@@ -561,7 +581,15 @@
         } else {
             // 旋转的方法
             CIImage *wImage = [ciimage imageByApplyingCGOrientation:self.rotateOrientation];
-            CIImage *newImage = [wImage imageByApplyingTransform:CGAffineTransformMakeScale(realWidthScale, realHeightScale)];
+            CIImage *source = [wImage imageByApplyingTransform:CGAffineTransformMakeScale(realWidthScale, realHeightScale)];
+            UIImage *appicon1024 = _waterMarkImage;
+            CIImage *watermarkImage = [[CIImage alloc] initWithCGImage:appicon1024.CGImage];
+            CIFilter *watermarkFilter = [CIFilter filterWithName:@"CISourceOverCompositing"];
+            [watermarkFilter setValue:source forKey:kCIInputBackgroundImageKey];
+            [watermarkFilter setValue:watermarkImage forKey:kCIInputImageKey];
+            CIImage *newImage = watermarkFilter.outputImage;
+//            CIImage *newImage = [wImage imageByApplyingTransform:CGAffineTransformMakeScale(realWidthScale, realHeightScale)];
+
             
             CVPixelBufferRef newPixcelBuffer = nil;
             CVReturn ok1 = kCVReturnSuccess;

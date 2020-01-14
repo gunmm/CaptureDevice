@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		74F304F39BD212AB75E03124 /* Pods_CaptureDeviceProject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70DC69F188720B81DC66933C /* Pods_CaptureDeviceProject.framework */; };
 		7606F9D9237B059500605EE6 /* UITextViewWorkaround.m in Sources */ = {isa = PBXBuildFile; fileRef = 7606F9D8237B059500605EE6 /* UITextViewWorkaround.m */; };
+		760FD87723CE03DB0018BFBF /* WaterMarkView.m in Sources */ = {isa = PBXBuildFile; fileRef = 760FD87523CE03DB0018BFBF /* WaterMarkView.m */; };
 		761AB8E3230977AF00B97B0C /* appicon1024.png in Resources */ = {isa = PBXBuildFile; fileRef = 761AB8E2230977AF00B97B0C /* appicon1024.png */; };
 		761AB8E923099CCD00B97B0C /* ReplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD93A6DF22F1374D009190E2 /* ReplayKit.framework */; };
 		761AB8EA23099CCD00B97B0C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD93A6EC22F1374D009190E2 /* UIKit.framework */; };
@@ -307,6 +308,8 @@
 		70DC69F188720B81DC66933C /* Pods_CaptureDeviceProject.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CaptureDeviceProject.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7606F9D7237B059500605EE6 /* UITextViewWorkaround.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UITextViewWorkaround.h; sourceTree = "<group>"; };
 		7606F9D8237B059500605EE6 /* UITextViewWorkaround.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UITextViewWorkaround.m; sourceTree = "<group>"; };
+		760FD87523CE03DB0018BFBF /* WaterMarkView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaterMarkView.m; sourceTree = "<group>"; };
+		760FD87623CE03DB0018BFBF /* WaterMarkView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaterMarkView.h; sourceTree = "<group>"; };
 		761AB8E2230977AF00B97B0C /* appicon1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appicon1024.png; sourceTree = "<group>"; };
 		761AB8E823099CCD00B97B0C /* ScreenCapUI.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ScreenCapUI.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		761AB8EC23099CCD00B97B0C /* BroadcastSetupViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BroadcastSetupViewController.h; sourceTree = "<group>"; };
@@ -1475,6 +1478,8 @@
 		765FCAFB22F533A000948374 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				760FD87623CE03DB0018BFBF /* WaterMarkView.h */,
+				760FD87523CE03DB0018BFBF /* WaterMarkView.m */,
 				765FCAFF22F5340300948374 /* ClickJumpTableViewCell.h */,
 				765FCB0022F5340300948374 /* ClickJumpTableViewCell.m */,
 				765FCB0122F5340300948374 /* ClickJumpTableViewCell.xib */,
@@ -2094,6 +2099,7 @@
 				765FCAF122F5297100948374 /* CSConstants.m in Sources */,
 				765FCAF622F52B1E00948374 /* NavBgImage.m in Sources */,
 				769E25E32311483900D39537 /* PushFailGuidanceController.m in Sources */,
+				760FD87723CE03DB0018BFBF /* WaterMarkView.m in Sources */,
 				7657731F22F5D3C50042A8FF /* ScreenCatchTableFooterView.m in Sources */,
 				765FCAFE22F533A000948374 /* ScreenCatchViewController.m in Sources */,
 				765FCADA22F51CBF00948374 /* CameraCatchHandler.m in Sources */,

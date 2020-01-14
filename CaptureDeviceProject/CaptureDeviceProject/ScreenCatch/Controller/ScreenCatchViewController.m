@@ -17,6 +17,7 @@
 #import "NetWorking.h"
 #import "BaseDeviceManager.h"
 #import "PayManager.h"
+#import "WaterMarkView.h"
 
 @interface ScreenCatchViewController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -52,6 +53,16 @@
     
     [self initData];
     [self initView];
+
+    UIView *waterMarkView = [[WaterMarkView alloc] initWithFrame:CGRectMake(0, 0, 375, 667)];
+    CGSize s = waterMarkView.bounds.size;
+    UIGraphicsBeginImageContextWithOptions(s, NO, [UIScreen mainScreen].scale);
+    [waterMarkView.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    NSURL *groupURL = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:@"group.gunmm.CaptureDeviceProject"];
+    NSURL *fileURL = [groupURL URLByAppendingPathComponent:@"waterMarkView.png"];
+    [UIImagePNGRepresentation(image) writeToURL:fileURL atomically:YES];
 }
 
 
