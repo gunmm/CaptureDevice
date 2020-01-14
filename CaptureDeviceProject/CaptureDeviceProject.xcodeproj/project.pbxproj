@@ -239,7 +239,6 @@
 		769E25DF231125A200D39537 /* NetWorking.m in Sources */ = {isa = PBXBuildFile; fileRef = 769E25DE231125A200D39537 /* NetWorking.m */; };
 		769E25E32311483900D39537 /* PushFailGuidanceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769E25E12311483900D39537 /* PushFailGuidanceController.m */; };
 		769E25E42311483900D39537 /* PushFailGuidanceController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 769E25E22311483900D39537 /* PushFailGuidanceController.xib */; };
-		76A1374723B866D800AF1720 /* HUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A1374523B866CD00AF1720 /* HUD.m */; };
 		76C9072A22F5C1A8006BA6E5 /* SelectListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 76C9072922F5C1A8006BA6E5 /* SelectListModel.m */; };
 		76DA0B242316D64C0053693F /* MixAudioModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 76DA0B232316D64C0053693F /* MixAudioModel.m */; };
 		CD5A637322FBF3AD00D6A5B1 /* XDXAduioEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = CD5A637122FBF3AD00D6A5B1 /* XDXAduioEncoder.m */; };
@@ -304,6 +303,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5FCDD0B179A1BCD6861FF688 /* Pods-CaptureDeviceProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptureDeviceProject.release.xcconfig"; path = "Target Support Files/Pods-CaptureDeviceProject/Pods-CaptureDeviceProject.release.xcconfig"; sourceTree = "<group>"; };
 		70DC69F188720B81DC66933C /* Pods_CaptureDeviceProject.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CaptureDeviceProject.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7606F9D7237B059500605EE6 /* UITextViewWorkaround.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UITextViewWorkaround.h; sourceTree = "<group>"; };
 		7606F9D8237B059500605EE6 /* UITextViewWorkaround.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UITextViewWorkaround.m; sourceTree = "<group>"; };
@@ -766,14 +766,11 @@
 		769E25E02311483900D39537 /* PushFailGuidanceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PushFailGuidanceController.h; sourceTree = "<group>"; };
 		769E25E12311483900D39537 /* PushFailGuidanceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PushFailGuidanceController.m; sourceTree = "<group>"; };
 		769E25E22311483900D39537 /* PushFailGuidanceController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PushFailGuidanceController.xib; sourceTree = "<group>"; };
-		76A1374523B866CD00AF1720 /* HUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HUD.m; sourceTree = "<group>"; };
-		76A1374623B866D700AF1720 /* HUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HUD.h; sourceTree = "<group>"; };
 		76C9072822F5C1A8006BA6E5 /* SelectListModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelectListModel.h; sourceTree = "<group>"; };
 		76C9072922F5C1A8006BA6E5 /* SelectListModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SelectListModel.m; sourceTree = "<group>"; };
 		76DA0B222316D64C0053693F /* MixAudioModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MixAudioModel.h; sourceTree = "<group>"; };
 		76DA0B232316D64C0053693F /* MixAudioModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MixAudioModel.m; sourceTree = "<group>"; };
-		9A4619DBFCAD645C8408285D /* Pods-CaptureDeviceProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptureDeviceProject.debug.xcconfig"; path = "Target Support Files/Pods-CaptureDeviceProject/Pods-CaptureDeviceProject.debug.xcconfig"; sourceTree = "<group>"; };
-		B16A66E9989C236987C2CADF /* Pods-CaptureDeviceProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptureDeviceProject.release.xcconfig"; path = "Target Support Files/Pods-CaptureDeviceProject/Pods-CaptureDeviceProject.release.xcconfig"; sourceTree = "<group>"; };
+		AC56631D271CABDC36A73A69 /* Pods-CaptureDeviceProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptureDeviceProject.debug.xcconfig"; path = "Target Support Files/Pods-CaptureDeviceProject/Pods-CaptureDeviceProject.debug.xcconfig"; sourceTree = "<group>"; };
 		CD5A637122FBF3AD00D6A5B1 /* XDXAduioEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XDXAduioEncoder.m; sourceTree = "<group>"; };
 		CD5A637222FBF3AD00D6A5B1 /* XDXAduioEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDXAduioEncoder.h; sourceTree = "<group>"; };
 		CD5FFF4523B5DA6100181C50 /* PayManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PayManager.h; sourceTree = "<group>"; };
@@ -1438,8 +1435,6 @@
 		765FCAEE22F5290C00948374 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				76A1374623B866D700AF1720 /* HUD.h */,
-				76A1374523B866CD00AF1720 /* HUD.m */,
 				769E25DD231125A200D39537 /* NetWorking.h */,
 				769E25DE231125A200D39537 /* NetWorking.m */,
 				7657732722F5E2410042A8FF /* UIViewExt.h */,
@@ -1601,8 +1596,8 @@
 		D71758EE4C55551FD4152902 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				9A4619DBFCAD645C8408285D /* Pods-CaptureDeviceProject.debug.xcconfig */,
-				B16A66E9989C236987C2CADF /* Pods-CaptureDeviceProject.release.xcconfig */,
+				AC56631D271CABDC36A73A69 /* Pods-CaptureDeviceProject.debug.xcconfig */,
+				5FCDD0B179A1BCD6861FF688 /* Pods-CaptureDeviceProject.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -2089,7 +2084,6 @@
 				765FCB0B22F5730200948374 /* UIView+HUD.m in Sources */,
 				7657732922F5E2420042A8FF /* UIViewExt.m in Sources */,
 				CD9704F822DC6D9500132518 /* AppDelegate.m in Sources */,
-				76A1374723B866D800AF1720 /* HUD.m in Sources */,
 				765FCB0722F5376100948374 /* SetPushUrlViewController.m in Sources */,
 				76C9072A22F5C1A8006BA6E5 /* SelectListModel.m in Sources */,
 				7606F9D9237B059500605EE6 /* UITextViewWorkaround.m in Sources */,
@@ -2206,7 +2200,7 @@
 		};
 		CD93A6FD22F1374D009190E2 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9A4619DBFCAD645C8408285D /* Pods-CaptureDeviceProject.debug.xcconfig */;
+			baseConfigurationReference = AC56631D271CABDC36A73A69 /* Pods-CaptureDeviceProject.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ScreenCapture/ScreenCapture.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -2230,7 +2224,7 @@
 		};
 		CD93A6FE22F1374D009190E2 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B16A66E9989C236987C2CADF /* Pods-CaptureDeviceProject.release.xcconfig */;
+			baseConfigurationReference = 5FCDD0B179A1BCD6861FF688 /* Pods-CaptureDeviceProject.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ScreenCapture/ScreenCapture.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -2368,7 +2362,7 @@
 		};
 		CD97052022DC6D9600132518 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9A4619DBFCAD645C8408285D /* Pods-CaptureDeviceProject.debug.xcconfig */;
+			baseConfigurationReference = AC56631D271CABDC36A73A69 /* Pods-CaptureDeviceProject.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = CaptureDeviceProject/CaptureDeviceProject.entitlements;
@@ -2393,7 +2387,7 @@
 		};
 		CD97052122DC6D9600132518 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B16A66E9989C236987C2CADF /* Pods-CaptureDeviceProject.release.xcconfig */;
+			baseConfigurationReference = 5FCDD0B179A1BCD6861FF688 /* Pods-CaptureDeviceProject.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = CaptureDeviceProject/CaptureDeviceProject.entitlements;
