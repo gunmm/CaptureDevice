@@ -242,10 +242,10 @@
 //    CGContextFillRect(context2, rect);
 //    UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
 //    UIGraphicsEndImageContext();
-    NSString *encodedImageStr = [[self.userDefaults objectForKey:@"waterMarkImage"] mutableCopy];
+    NSData *encodedImageStr = [[self.userDefaults objectForKey:@"waterMarkImage"] mutableCopy];
 
-    NSData *decodedImageData = [[NSData alloc] initWithBase64EncodedString:encodedImageStr options:NSDataBase64DecodingIgnoreUnknownCharacters];
-    UIImage *decodedImage = [UIImage imageWithData:decodedImageData];
+//    NSData *decodedImageData = [[NSData alloc] initWithBase64EncodedString:encodedImageStr options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    UIImage *decodedImage = [UIImage imageWithData:encodedImageStr];
     _waterMarkImage = decodedImage;
     
 //    NSURL *groupURL = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:@"group.gunmm.CaptureDeviceProject"];
@@ -583,14 +583,14 @@
             }
         } else {
             // 旋转的方法
-            CIImage *wImage = [ciimage imageByApplyingCGOrientation:self.rotateOrientation];
-            CIImage *source = [wImage imageByApplyingTransform:CGAffineTransformMakeScale(realWidthScale, realHeightScale)];
             UIImage *appicon1024 = _waterMarkImage;
             CIImage *watermarkImage = [[CIImage alloc] initWithCGImage:appicon1024.CGImage];
             CIFilter *watermarkFilter = [CIFilter filterWithName:@"CISourceOverCompositing"];
-            [watermarkFilter setValue:source forKey:kCIInputBackgroundImageKey];
+            [watermarkFilter setValue:ciimage forKey:kCIInputBackgroundImageKey];
             [watermarkFilter setValue:watermarkImage forKey:kCIInputImageKey];
-            CIImage *newImage = watermarkFilter.outputImage;
+            CIImage *midImage = watermarkFilter.outputImage;
+            CIImage *wImage = [midImage imageByApplyingCGOrientation:self.rotateOrientation];
+            CIImage *newImage = [wImage imageByApplyingTransform:CGAffineTransformMakeScale(realWidthScale, realHeightScale)];
 //            CIImage *newImage = [wImage imageByApplyingTransform:CGAffineTransformMakeScale(realWidthScale, realHeightScale)];
 
             

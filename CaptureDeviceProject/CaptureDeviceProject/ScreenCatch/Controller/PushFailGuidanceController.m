@@ -29,10 +29,6 @@
     NSArray *section1Title = @[@"1. 插耳机并打开mic →→→ 输出100%麦克风声音+20%的扬声器声音", @"2. 插耳机未打开mic →→→ 输出100%的扬声器声音", @"3. 未插耳机打开mic →→→ 输出100%的mic声音（包含着扬声器中输出到mic的声音）", @"4. 未插耳机未打开mic →→→ 输出100%的扬声器声音"];
     NSArray *section2Title = @[@"1. 确认rtmp推流地址正确", @"2. 确认给与了应用软件网络、麦克风、相机、通知权限", @"3. 确认推流页已开始计时", @"4. 以上步骤皆已确认无误请联系开发者（qq：924744097"];
     _textArray = @[section1Title, section2Title];
-    
-    
-    
-
 }
 
 #pragma mark -- UITableViewDataSource

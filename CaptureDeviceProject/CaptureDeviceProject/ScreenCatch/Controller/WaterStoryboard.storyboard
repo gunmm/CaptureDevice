@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="e3B-LK-td8">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Water Mark View Controller-->
+        <scene sceneID="f7g-6x-UDB">
+            <objects>
+                <tableViewController id="e3B-LK-td8" customClass="WaterMarkViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="14n-xi-jCw">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <sections>
+                            <tableViewSection headerTitle="水印内容" id="oZy-DK-0rW">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="60" id="Lj8-HW-pEo">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="60"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Lj8-HW-pEo" id="pru-nu-ARh">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="请输入内容" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="C8J-7v-50c">
+                                                    <rect key="frame" x="12" y="13" width="351" height="34"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="C8J-7v-50c" firstAttribute="leading" secondItem="pru-nu-ARh" secondAttribute="leading" constant="12" id="6OZ-gX-1JU"/>
+                                                <constraint firstAttribute="trailing" secondItem="C8J-7v-50c" secondAttribute="trailing" constant="12" id="pTt-Bb-9mS"/>
+                                                <constraint firstItem="C8J-7v-50c" firstAttribute="top" secondItem="pru-nu-ARh" secondAttribute="top" constant="13" id="qLc-Of-6bZ"/>
+                                                <constraint firstAttribute="bottom" secondItem="C8J-7v-50c" secondAttribute="bottom" constant="13" id="udc-9o-Ze3"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="水印颜色" id="O1S-wl-rLM">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="60" id="AIJ-bY-dwA">
+                                        <rect key="frame" x="0.0" y="144" width="375" height="60"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="AIJ-bY-dwA" id="Igk-Fo-Wg5">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="4tP-aj-q5M">
+                                                    <rect key="frame" x="12" y="13" width="351" height="35"/>
+                                                    <segments>
+                                                        <segment title="黑色"/>
+                                                        <segment title="白色"/>
+                                                    </segments>
+                                                </segmentedControl>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="4tP-aj-q5M" firstAttribute="leading" secondItem="Igk-Fo-Wg5" secondAttribute="leading" constant="12" id="7qe-kL-fFV"/>
+                                                <constraint firstAttribute="trailing" secondItem="4tP-aj-q5M" secondAttribute="trailing" constant="12" id="RHS-6N-nqY"/>
+                                                <constraint firstAttribute="bottom" secondItem="4tP-aj-q5M" secondAttribute="bottom" constant="13" id="czN-cN-hXs"/>
+                                                <constraint firstItem="4tP-aj-q5M" firstAttribute="top" secondItem="Igk-Fo-Wg5" secondAttribute="top" constant="13" id="iqh-AH-s8W"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="字体大小" id="qvM-oh-vVr">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="60" id="IVp-jC-Ovs">
+                                        <rect key="frame" x="0.0" y="260" width="375" height="60"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="IVp-jC-Ovs" id="D9i-6F-ZS7">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="xeI-gM-39J">
+                                                    <rect key="frame" x="12" y="13" width="351" height="35"/>
+                                                    <segments>
+                                                        <segment title="16"/>
+                                                        <segment title="17"/>
+                                                        <segment title="18"/>
+                                                        <segment title="19"/>
+                                                        <segment title="20"/>
+                                                    </segments>
+                                                </segmentedControl>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="xeI-gM-39J" secondAttribute="bottom" constant="13" id="Ad0-hV-NoL"/>
+                                                <constraint firstAttribute="trailing" secondItem="xeI-gM-39J" secondAttribute="trailing" constant="12" id="Ago-NE-aYy"/>
+                                                <constraint firstItem="xeI-gM-39J" firstAttribute="top" secondItem="D9i-6F-ZS7" secondAttribute="top" constant="13" id="DAO-UH-TKU"/>
+                                                <constraint firstItem="xeI-gM-39J" firstAttribute="leading" secondItem="D9i-6F-ZS7" secondAttribute="leading" constant="12" id="b8b-w1-2Ag"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="水印位置" id="SFe-gT-mO3">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="60" id="vpl-7s-Gbk">
+                                        <rect key="frame" x="0.0" y="376" width="375" height="60"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="vpl-7s-Gbk" id="w8l-as-me7">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="sy9-VL-UCf">
+                                                    <rect key="frame" x="12" y="13" width="351" height="35"/>
+                                                    <segments>
+                                                        <segment title="左上角"/>
+                                                        <segment title="上中间"/>
+                                                        <segment title="右上角"/>
+                                                        <segment title="左下角"/>
+                                                        <segment title="下中间"/>
+                                                        <segment title="右下角"/>
+                                                    </segments>
+                                                </segmentedControl>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="sy9-VL-UCf" secondAttribute="trailing" constant="12" id="1ca-KP-Dw3"/>
+                                                <constraint firstAttribute="bottom" secondItem="sy9-VL-UCf" secondAttribute="bottom" constant="13" id="Npx-xq-dGf"/>
+                                                <constraint firstItem="sy9-VL-UCf" firstAttribute="top" secondItem="w8l-as-me7" secondAttribute="top" constant="13" id="f6x-wx-uWb"/>
+                                                <constraint firstItem="sy9-VL-UCf" firstAttribute="leading" secondItem="w8l-as-me7" secondAttribute="leading" constant="12" id="ywf-Jy-LXw"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="水印开关" id="Ldc-nc-48k">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="60" id="F9N-C9-oUx">
+                                        <rect key="frame" x="0.0" y="492" width="375" height="60"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="F9N-C9-oUx" id="Iaa-xQ-Rrw">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="eKl-y3-99V">
+                                                    <rect key="frame" x="12" y="14.5" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="switchBtnAct:" destination="e3B-LK-td8" eventType="valueChanged" id="kfD-3G-2YZ"/>
+                                                    </connections>
+                                                </switch>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="eKl-y3-99V" firstAttribute="leading" secondItem="Iaa-xQ-Rrw" secondAttribute="leading" constant="12" id="MN5-v7-mOa"/>
+                                                <constraint firstItem="eKl-y3-99V" firstAttribute="centerY" secondItem="Iaa-xQ-Rrw" secondAttribute="centerY" id="Ux2-6j-FL7"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="e3B-LK-td8" id="7xb-Qm-UOY"/>
+                            <outlet property="delegate" destination="e3B-LK-td8" id="v7D-2H-Qbo"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <outlet property="colorSegment" destination="4tP-aj-q5M" id="nIY-0N-wmV"/>
+                        <outlet property="fontSizeSegment" destination="xeI-gM-39J" id="kCY-0b-p7e"/>
+                        <outlet property="locationSegment" destination="sy9-VL-UCf" id="ygL-4L-0K7"/>
+                        <outlet property="waterSwitch" destination="eKl-y3-99V" id="WYl-b0-WXq"/>
+                        <outlet property="waterTextFiled" destination="C8J-7v-50c" id="NOG-TY-wxm"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Kxd-DA-2cJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="601" y="183"/>
+        </scene>
+    </scenes>
+</document>

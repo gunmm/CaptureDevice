@@ -18,6 +18,7 @@
 #import "BaseDeviceManager.h"
 #import "PayManager.h"
 #import "WaterMarkView.h"
+#import "WaterMarkViewController.h"
 
 @interface ScreenCatchViewController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -33,6 +34,7 @@
 @property (nonatomic, copy) NSString *screenOrientation;
 @property (nonatomic, copy) NSString *applicationVoice;
 @property (nonatomic, copy) NSString *micVoice;
+@property (nonatomic, assign) BOOL hasWaterMark;
 
 @property (nonatomic, strong) SelectListModel *screenOrientationModel;
 @property (nonatomic, strong) SelectListModel *applicationVoiceModel;
@@ -53,24 +55,17 @@
     
     [self initData];
     [self initView];
-
-    UIView *waterMarkView = [[WaterMarkView alloc] initWithFrame:CGRectMake(0, 0, 375, 667)];
-    CGSize s = waterMarkView.bounds.size;
+    
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    titleLabel.text = @"s我是";
+    titleLabel.backgroundColor = [UIColor clearColor];
+    UIView *waterMarkView = [[WaterMarkView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    CGSize s = titleLabel.bounds.size;
     UIGraphicsBeginImageContextWithOptions(s, NO, [UIScreen mainScreen].scale);
-    [waterMarkView.layer renderInContext:UIGraphicsGetCurrentContext()];
+    [titleLabel.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    
-    
-    
-    NSData *data = UIImageJPEGRepresentation(image, 1.0f);
-    NSString *encodedImageStr = [data base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
-//    NSURL *groupURL = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:@"group.gunmm.CaptureDeviceProject"];
-//    NSURL *fileURL = [groupURL URLByAppendingPathComponent:@"waterMarkView.png"];
-//    [UIImagePNGRepresentation(image) writeToURL:fileURL atomically:YES];
-    
-    [self.userDefaults setObject:encodedImageStr forKey:@"waterMarkImage"];
-
+    [self.userDefaults setObject:UIImagePNGRepresentation(image) forKey:@"waterMarkImage"];
 }
 
 
@@ -78,8 +73,8 @@
     self.sectionHeadTitleArray = @[
         @"推流地址",
         @"屏幕方向",
+        @"水印设置",
         @"音量设置",
-        @"",
     ];
     
     self.userDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"group.gunmm.CaptureDeviceProject"];
@@ -138,11 +133,11 @@
 #pragma mark -- UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == 2) {
+    if (section == 3) {
         return 2;
     }
     return 1;
@@ -156,6 +151,8 @@
     } else if (indexPath.section == 1) {
         titleString = self.screenOrientationModel.titleString;
     } else if (indexPath.section == 2) {
+        titleString = self.hasWaterMark ? @"已设置" : @"设置水印";
+    }else if (indexPath.section == 3) {
         if (indexPath.row == 0) {
             titleString = [NSString stringWithFormat:@"应用%@",self.applicationVoiceModel.titleString];;
         } else if (indexPath.row == 1) {
@@ -177,14 +174,14 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    if (section == 1) {
+    if (section == 2) {
         return 300;
     }
     return 0.001f;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    if (section == 1) {
+    if (section == 2) {
         if (self.urlStr.length > 0) {
             UserInfoKeyChain *userInfoKeyChain = [UserInfoKeyChain keychainInstance];
             long expirationTimeLong = [userInfoKeyChain.expirationTime longValue];
@@ -214,6 +211,16 @@
             [weakSelf.userDefaults setObject:pushUrl forKey:@"urlStr"];
         };
         [self.navigationController pushViewController:setPushUrlViewController animated:YES];
+    } else if (indexPath.section == 2) {
+        UIStoryboard *storyBoard =  [UIStoryboard storyboardWithName:@"WaterStoryboard" bundle:nil];
+        WaterMarkViewController *waterMarkViewController = [storyBoard instantiateInitialViewController];
+        waterMarkViewController.isOpen = self.hasWaterMark;
+        [self.navigationController pushViewController:waterMarkViewController animated:YES];
+        waterMarkViewController.changeWaterMarkBlock = ^(BOOL isOpen) {
+            weakSelf.hasWaterMark = isOpen;
+            [weakSelf.tableView reloadData];
+            [weakSelf.userDefaults setObject:@"1" forKey:@"hasWaterMark"];
+        };
     } else {
         SelectListViewController *selectListViewController = [[SelectListViewController alloc] init];
         if (indexPath.section == 1) {
@@ -224,7 +231,7 @@
                 [weakSelf.tableView reloadData];
                 [weakSelf.userDefaults setObject:@(selectCellModel.valueNumber) forKey:@"screenOrientationValue"];
             };
-        } else if (indexPath.section == 2) {
+        } else if (indexPath.section == 3) {
             if (indexPath.row == 0) {
                 selectListViewController.dataList = self.applicationVoicedataList;
                 selectListViewController.currentSelectCellModel = self.applicationVoiceModel;
