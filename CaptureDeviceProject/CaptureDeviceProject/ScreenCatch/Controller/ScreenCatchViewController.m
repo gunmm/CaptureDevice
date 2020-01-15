@@ -60,9 +60,17 @@
     [waterMarkView.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    NSURL *groupURL = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:@"group.gunmm.CaptureDeviceProject"];
-    NSURL *fileURL = [groupURL URLByAppendingPathComponent:@"waterMarkView.png"];
-    [UIImagePNGRepresentation(image) writeToURL:fileURL atomically:YES];
+    
+    
+    
+    NSData *data = UIImageJPEGRepresentation(image, 1.0f);
+    NSString *encodedImageStr = [data base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+//    NSURL *groupURL = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:@"group.gunmm.CaptureDeviceProject"];
+//    NSURL *fileURL = [groupURL URLByAppendingPathComponent:@"waterMarkView.png"];
+//    [UIImagePNGRepresentation(image) writeToURL:fileURL atomically:YES];
+    
+    [self.userDefaults setObject:encodedImageStr forKey:@"waterMarkImage"];
+
 }
 
 

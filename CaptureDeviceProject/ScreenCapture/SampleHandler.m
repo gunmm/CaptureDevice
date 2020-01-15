@@ -242,13 +242,16 @@
 //    CGContextFillRect(context2, rect);
 //    UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
 //    UIGraphicsEndImageContext();
-//    NSData *imageData = [self.userDefaults objectForKey:@"waterMarkImage"];
-//    _waterMarkImage = [uii];
+    NSString *encodedImageStr = [[self.userDefaults objectForKey:@"waterMarkImage"] mutableCopy];
+
+    NSData *decodedImageData = [[NSData alloc] initWithBase64EncodedString:encodedImageStr options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    UIImage *decodedImage = [UIImage imageWithData:decodedImageData];
+    _waterMarkImage = decodedImage;
     
-    NSURL *groupURL = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:@"group.gunmm.CaptureDeviceProject"];
-    NSURL *fileURL = [groupURL URLByAppendingPathComponent:@"waterMarkView.png"];
-    NSData *waterMarkData = [NSData dataWithContentsOfURL:fileURL];
-    _waterMarkImage = [UIImage imageWithData:waterMarkData];
+//    NSURL *groupURL = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:@"group.gunmm.CaptureDeviceProject"];
+//    NSURL *fileURL = [groupURL URLByAppendingPathComponent:@"waterMarkView.png"];
+//    NSData *waterMarkData = [NSData dataWithContentsOfURL:fileURL];
+//    _waterMarkImage = [UIImage imageWithData:waterMarkData];
     NSLog(@"");
 
    

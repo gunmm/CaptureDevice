@@ -13,15 +13,15 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         [self setUpUI];
+        self.backgroundColor = [UIColor redColor];
     }
     return self;
 }
 
 - (void)setUpUI {
-    UILabel *titleLabel = [[UILabel alloc] init];
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 500, 200, 100)];
+    titleLabel.backgroundColor = [UIColor greenColor];
     titleLabel.text = @"s我是测试测试";
-    titleLabel.textColor = [UIColor whiteColor];
-    titleLabel.center = self.center;
     [self addSubview:titleLabel];
 }
 
