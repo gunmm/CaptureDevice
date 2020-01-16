@@ -156,11 +156,18 @@
     
     NSString *product = transaction.payment.productIdentifier;
     UserInfoKeyChain *userInfoKeyChain = [UserInfoKeyChain keychainInstance];
+    
+    long nowTimeLong = [[NSDate date] timeIntervalSince1970];
+    long baseTimeLong = [userInfoKeyChain.expirationTime longValue];
+    if (nowTimeLong > baseTimeLong) {
+        baseTimeLong = nowTimeLong;
+    }
+    
     if ([product isEqualToString:@"com.gunmm.lifelong"]) {
-        long expirationTimeLong = [userInfoKeyChain.expirationTime longValue] + 50 * 365 * 24 * 3600;
+        long expirationTimeLong = baseTimeLong + 50 * 365 * 24 * 3600;
         userInfoKeyChain.expirationTime = [NSString stringWithFormat:@"%ld", expirationTimeLong];
     } else {
-        long expirationTimeLong = [userInfoKeyChain.expirationTime longValue] + 31 * 24 * 3600;
+        long expirationTimeLong = baseTimeLong + 31 * 24 * 3600;
         userInfoKeyChain.expirationTime = [NSString stringWithFormat:@"%ld", expirationTimeLong];
     }
     [userInfoKeyChain saveToKeychain];
