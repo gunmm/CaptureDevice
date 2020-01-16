@@ -236,6 +236,8 @@
 		765FCB0722F5376100948374 /* SetPushUrlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 765FCB0522F5376100948374 /* SetPushUrlViewController.m */; };
 		765FCB0822F5376100948374 /* SetPushUrlViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 765FCB0622F5376100948374 /* SetPushUrlViewController.xib */; };
 		765FCB0B22F5730200948374 /* UIView+HUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 765FCB0A22F5730200948374 /* UIView+HUD.m */; };
+		769A812A23D08D4A0002AC13 /* WaterMarkCusController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769A812823D08D4A0002AC13 /* WaterMarkCusController.m */; };
+		769A812B23D08D4A0002AC13 /* WaterMarkCusController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 769A812923D08D4A0002AC13 /* WaterMarkCusController.xib */; };
 		769E25DC2311230B00D39537 /* BaseDeviceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 769E25DB2311230B00D39537 /* BaseDeviceManager.m */; };
 		769E25DF231125A200D39537 /* NetWorking.m in Sources */ = {isa = PBXBuildFile; fileRef = 769E25DE231125A200D39537 /* NetWorking.m */; };
 		769E25E32311483900D39537 /* PushFailGuidanceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769E25E12311483900D39537 /* PushFailGuidanceController.m */; };
@@ -765,6 +767,9 @@
 		765FCB0922F5730200948374 /* UIView+HUD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+HUD.h"; sourceTree = "<group>"; };
 		765FCB0A22F5730200948374 /* UIView+HUD.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+HUD.m"; sourceTree = "<group>"; };
 		76608B5723201DD3009B5E74 /* PMConfig.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = PMConfig.xcconfig; sourceTree = "<group>"; };
+		769A812723D08D4A0002AC13 /* WaterMarkCusController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaterMarkCusController.h; sourceTree = "<group>"; };
+		769A812823D08D4A0002AC13 /* WaterMarkCusController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WaterMarkCusController.m; sourceTree = "<group>"; };
+		769A812923D08D4A0002AC13 /* WaterMarkCusController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WaterMarkCusController.xib; sourceTree = "<group>"; };
 		769E25DA2311230B00D39537 /* BaseDeviceManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseDeviceManager.h; sourceTree = "<group>"; };
 		769E25DB2311230B00D39537 /* BaseDeviceManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseDeviceManager.m; sourceTree = "<group>"; };
 		769E25DD231125A200D39537 /* NetWorking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetWorking.h; sourceTree = "<group>"; };
@@ -1480,6 +1485,9 @@
 				76D0979C23CF56BA00C8D044 /* WaterMarkViewController.h */,
 				76D0979D23CF56BA00C8D044 /* WaterMarkViewController.m */,
 				76D097A123CF572800C8D044 /* WaterStoryboard.storyboard */,
+				769A812723D08D4A0002AC13 /* WaterMarkCusController.h */,
+				769A812823D08D4A0002AC13 /* WaterMarkCusController.m */,
+				769A812923D08D4A0002AC13 /* WaterMarkCusController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1794,6 +1802,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				769A812B23D08D4A0002AC13 /* WaterMarkCusController.xib in Resources */,
 				7647932222F5B413005B622E /* SelectListViewController.xib in Resources */,
 				765FCB0322F5340300948374 /* ClickJumpTableViewCell.xib in Resources */,
 				769E25E42311483900D39537 /* PushFailGuidanceController.xib in Resources */,
@@ -2115,6 +2124,7 @@
 				765FCAFE22F533A000948374 /* ScreenCatchViewController.m in Sources */,
 				76D0979F23CF56BA00C8D044 /* WaterMarkViewController.m in Sources */,
 				765FCADA22F51CBF00948374 /* CameraCatchHandler.m in Sources */,
+				769A812A23D08D4A0002AC13 /* WaterMarkCusController.m in Sources */,
 				765FCB0222F5340300948374 /* ClickJumpTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
