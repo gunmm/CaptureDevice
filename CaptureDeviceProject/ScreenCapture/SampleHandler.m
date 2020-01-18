@@ -78,8 +78,8 @@
 /// 当前是否采集到了关键帧
 @property (nonatomic, assign) BOOL hasKeyFrameVideo;
 
-@property (nonatomic, strong) UIImage *waterMarkImage;
-
+@property (nonatomic, strong) CIImage *watermarkImage;
+@property (nonatomic, assign) BOOL usingWaterMarkImage;
 
 @end
 
@@ -235,25 +235,15 @@
     if (@available(iOS 13.0, *)) {
         _isBStatus = NO;
     }
-//    CGRect rect=CGRectMake(0.0f, 0.0f, 100.0f, 100.0f);
-//    UIGraphicsBeginImageContext(rect.size);
-//    CGContextRef context2 = UIGraphicsGetCurrentContext();
-//    CGContextSetFillColorWithColor(context2, [[UIColor redColor] CGColor]);
-//    CGContextFillRect(context2, rect);
-//    UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
-//    UIGraphicsEndImageContext();
-    NSData *encodedImageStr = [[self.userDefaults objectForKey:@"waterMarkImage"] mutableCopy];
-
-//    NSData *decodedImageData = [[NSData alloc] initWithBase64EncodedString:encodedImageStr options:NSDataBase64DecodingIgnoreUnknownCharacters];
-    UIImage *decodedImage = [UIImage imageWithData:encodedImageStr];
-    _waterMarkImage = decodedImage;
     
-//    NSURL *groupURL = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:@"group.gunmm.CaptureDeviceProject"];
-//    NSURL *fileURL = [groupURL URLByAppendingPathComponent:@"waterMarkView.png"];
-//    NSData *waterMarkData = [NSData dataWithContentsOfURL:fileURL];
-//    _waterMarkImage = [UIImage imageWithData:waterMarkData];
-    NSLog(@"");
+    self.usingWaterMarkImage = [[_userDefaults objectForKey:@"usingWaterMarkImage"] boolValue];
+    if (self.usingWaterMarkImage) {
+        NSData *encodedImageStr = [[self.userDefaults objectForKey:@"waterMarkImage"] mutableCopy];
+        UIImage *decodedImage = [UIImage imageWithData:encodedImageStr];
+        self.watermarkImage = [[CIImage alloc] initWithCGImage:decodedImage.CGImage];
+    }
 
+    
    
 }
 
@@ -283,12 +273,7 @@
                 return;
             }
             if (self.canUpload) {
-                __weak typeof(self) weakSelf = self;
-                CFRetain(sampleBuffer);
-                dispatch_async(self.rotateQueue, ^{
-                    [weakSelf dealWithSampleBuffer:sampleBuffer];
-                    CFRelease(sampleBuffer);
-                });
+               [self dealWithSampleBuffer:sampleBuffer];
             }
         }
             break;
@@ -297,101 +282,90 @@
                 return;
             }
             if (self.canUpload) {
-                CFRetain(sampleBuffer);
-                __weak typeof(self) weakSelf = self;
-                dispatch_async(self.audioQueue, ^{
-                    //从samplebuffer中获取blockbuffer
-                    CMBlockBufferRef blockBuffer = CMSampleBufferGetDataBuffer(sampleBuffer);
-                    size_t pcmLength = 0;
-                    char *pcmData = NULL;
-                    //获取blockbuffer中的pcm数据的指针和长度
-                    OSStatus status = CMBlockBufferGetDataPointer(blockBuffer, 0, NULL, &pcmLength, &pcmData);
-                    if (status != noErr) {
-                        NSLog(@"从block中获取pcm数据失败");
-                        CFRelease(sampleBuffer);
-                        return;
-                    } else {
-                        CMAudioFormatDescriptionRef audioFormatDes =  (CMAudioFormatDescriptionRef)CMSampleBufferGetFormatDescription(sampleBuffer);
-                        AudioStreamBasicDescription inAudioStreamBasicDescription = *(CMAudioFormatDescriptionGetStreamBasicDescription(audioFormatDes));
-                        inAudioStreamBasicDescription.mFormatFlags = 0xe;
-                        weakSelf.mixAudioManager.appInputFormat = inAudioStreamBasicDescription;
-                        [weakSelf.mixAudioManager sendAppBufferList:[[NSData alloc] initWithBytes:pcmData length:pcmLength] timeStamp:(CACurrentMediaTime()*1000)];
-                    }
-                    CFRelease(sampleBuffer);
-                });
+                //从samplebuffer中获取blockbuffer
+                CMBlockBufferRef blockBuffer = CMSampleBufferGetDataBuffer(sampleBuffer);
+                size_t pcmLength = 0;
+                char *pcmData = NULL;
+                //获取blockbuffer中的pcm数据的指针和长度
+                OSStatus status = CMBlockBufferGetDataPointer(blockBuffer, 0, NULL, &pcmLength, &pcmData);
+                if (status != noErr) {
+                    NSLog(@"从block中获取pcm数据失败");
+                    return;
+                } else {
+                    CMAudioFormatDescriptionRef audioFormatDes =  (CMAudioFormatDescriptionRef)CMSampleBufferGetFormatDescription(sampleBuffer);
+                    AudioStreamBasicDescription inAudioStreamBasicDescription = *(CMAudioFormatDescriptionGetStreamBasicDescription(audioFormatDes));
+                    inAudioStreamBasicDescription.mFormatFlags = 0xe;
+                    self.mixAudioManager.appInputFormat = inAudioStreamBasicDescription;
+                    [self.mixAudioManager sendAppBufferList:[[NSData alloc] initWithBytes:pcmData length:pcmLength] timeStamp:(CACurrentMediaTime()*1000)];
+                }
             }
             break;
         case RPSampleBufferTypeAudioMic:
         {
             if (self.canUpload) {
-                CFRetain(sampleBuffer);
-                __weak typeof(self) weakSelf = self;
-                dispatch_async(self.audioQueue, ^{
-                    //从samplebuffer中获取blockbuffer
-                    CMBlockBufferRef blockBuffer = CMSampleBufferGetDataBuffer(sampleBuffer);
-                    size_t pcmLength = 0;
-                    char *pcmData = NULL;
-                    //获取blockbuffer中的pcm数据的指针和长度
-                    OSStatus status = CMBlockBufferGetDataPointer(blockBuffer, 0, NULL, &pcmLength, &pcmData);
-                    if (status != noErr) {
-                        NSLog(@"从block中获取pcm数据失败");
-                        CFRelease(sampleBuffer);
-                        return;
-                    } else {
-                        CMAudioFormatDescriptionRef audioFormatDes =  (CMAudioFormatDescriptionRef)CMSampleBufferGetFormatDescription(sampleBuffer);
-                        AudioStreamBasicDescription inAudioStreamBasicDescription = *(CMAudioFormatDescriptionGetStreamBasicDescription(audioFormatDes));
-                        //                        NSLog(@"***************** %lu", pcmLength);
-                        
-                        //                        mFormatFlags: 0xc
-                        if (weakSelf.isBStatus) {
-                            [self.audioEncoder setCustomInputFormat:inAudioStreamBasicDescription];
-                            NSData *data = [[NSData alloc] initWithBytes:pcmData length:pcmLength];
-                            [self.audioEncoder encodeAudioData:data timeStamp:(CACurrentMediaTime()*1000)];
-                        } else {
-                            inAudioStreamBasicDescription.mFormatFlags = 0xe;
-                            self.mixAudioManager.micInputFormat = inAudioStreamBasicDescription;
-                            if (!self.audioEncoder2) {
-                                AudioStreamBasicDescription inputFormat = {0};
-                                inputFormat.mSampleRate = 44100;
-                                inputFormat.mFormatID = kAudioFormatLinearPCM;
-                                inputFormat.mFormatFlags = 0xc;
-                                inputFormat.mChannelsPerFrame = 1;
-                                inputFormat.mFramesPerPacket = 1;
-                                inputFormat.mBitsPerChannel = 16;
-                                inputFormat.mBytesPerFrame = inputFormat.mBitsPerChannel / 8 * inputFormat.mChannelsPerFrame;
-                                inputFormat.mBytesPerPacket = inputFormat.mBytesPerFrame * inputFormat.mFramesPerPacket;
-                                self.audioEncoder2 = [[XDXAduioEncoder alloc] initWithSourceFormat:inputFormat
-                                                                                      destFormatID:kAudioFormatMPEG4AAC
-                                                                                        sampleRate:44100
-                                                                               isUseHardwareEncode:YES];
-                            }
-                            ///<  发送
-                            AudioBuffer inBuffer;
-                            inBuffer.mNumberChannels = 1;
-                            inBuffer.mData = pcmData;
-                            inBuffer.mDataByteSize = (UInt32)pcmLength;
-                            
-                            AudioBufferList buffers;
-                            buffers.mNumberBuffers = 1;
-                            buffers.mBuffers[0] = inBuffer;
-                            
-                            Float64 currentTime = CMTimeGetSeconds(CMClockMakeHostTimeFromSystemUnits(CACurrentMediaTime()));
-                            
-                            int64_t pts = (int64_t)((currentTime - 100) * 1000);
-                            __strong typeof(self) strongSelf = weakSelf;
-
-                            [weakSelf.audioEncoder2 encodeAudioWithSourceBuffer:buffers.mBuffers[0].mData sourceBufferSize:buffers.mBuffers[0].mDataByteSize pts:pts completeHandler:^(LFAudioFrame * _Nonnull frame) {
-                                if (strongSelf.isBStatus) {
-                                    NSData *data = [[NSData alloc] initWithBytes:pcmData length:pcmLength];
-                                    [strongSelf.audioEncoder encodeAudioData:data timeStamp:(CACurrentMediaTime()*1000)];
-                                } else {
-                                    [strongSelf.mixAudioManager sendMicBufferList:frame.data timeStamp:(CACurrentMediaTime()*1000)];
-                                }
-                            }];
-                        }
-                    }
+                //从samplebuffer中获取blockbuffer
+                CMBlockBufferRef blockBuffer = CMSampleBufferGetDataBuffer(sampleBuffer);
+                size_t pcmLength = 0;
+                char *pcmData = NULL;
+                //获取blockbuffer中的pcm数据的指针和长度
+                OSStatus status = CMBlockBufferGetDataPointer(blockBuffer, 0, NULL, &pcmLength, &pcmData);
+                if (status != noErr) {
+                    NSLog(@"从block中获取pcm数据失败");
                     CFRelease(sampleBuffer);
-                });
+                    return;
+                } else {
+                    CMAudioFormatDescriptionRef audioFormatDes =  (CMAudioFormatDescriptionRef)CMSampleBufferGetFormatDescription(sampleBuffer);
+                    AudioStreamBasicDescription inAudioStreamBasicDescription = *(CMAudioFormatDescriptionGetStreamBasicDescription(audioFormatDes));
+                    //                        NSLog(@"***************** %lu", pcmLength);
+                    
+                    //                        mFormatFlags: 0xc
+                    if (self.isBStatus) {
+                        [self.audioEncoder setCustomInputFormat:inAudioStreamBasicDescription];
+                        NSData *data = [[NSData alloc] initWithBytes:pcmData length:pcmLength];
+                        [self.audioEncoder encodeAudioData:data timeStamp:(CACurrentMediaTime()*1000)];
+                    } else {
+                        inAudioStreamBasicDescription.mFormatFlags = 0xe;
+                        self.mixAudioManager.micInputFormat = inAudioStreamBasicDescription;
+                        if (!self.audioEncoder2) {
+                            AudioStreamBasicDescription inputFormat = {0};
+                            inputFormat.mSampleRate = 44100;
+                            inputFormat.mFormatID = kAudioFormatLinearPCM;
+                            inputFormat.mFormatFlags = 0xc;
+                            inputFormat.mChannelsPerFrame = 1;
+                            inputFormat.mFramesPerPacket = 1;
+                            inputFormat.mBitsPerChannel = 16;
+                            inputFormat.mBytesPerFrame = inputFormat.mBitsPerChannel / 8 * inputFormat.mChannelsPerFrame;
+                            inputFormat.mBytesPerPacket = inputFormat.mBytesPerFrame * inputFormat.mFramesPerPacket;
+                            self.audioEncoder2 = [[XDXAduioEncoder alloc] initWithSourceFormat:inputFormat
+                                                                                  destFormatID:kAudioFormatMPEG4AAC
+                                                                                    sampleRate:44100
+                                                                           isUseHardwareEncode:YES];
+                        }
+                        ///<  发送
+                        AudioBuffer inBuffer;
+                        inBuffer.mNumberChannels = 1;
+                        inBuffer.mData = pcmData;
+                        inBuffer.mDataByteSize = (UInt32)pcmLength;
+                        
+                        AudioBufferList buffers;
+                        buffers.mNumberBuffers = 1;
+                        buffers.mBuffers[0] = inBuffer;
+                        
+                        Float64 currentTime = CMTimeGetSeconds(CMClockMakeHostTimeFromSystemUnits(CACurrentMediaTime()));
+                        
+                        int64_t pts = (int64_t)((currentTime - 100) * 1000);
+                        __weak typeof(self) weakSelf = self;
+
+                        [self.audioEncoder2 encodeAudioWithSourceBuffer:buffers.mBuffers[0].mData sourceBufferSize:buffers.mBuffers[0].mDataByteSize pts:pts completeHandler:^(LFAudioFrame * _Nonnull frame) {
+                            if (weakSelf.isBStatus) {
+                                NSData *data = [[NSData alloc] initWithBytes:pcmData length:pcmLength];
+                                [weakSelf.audioEncoder encodeAudioData:data timeStamp:(CACurrentMediaTime()*1000)];
+                            } else {
+                                [weakSelf.mixAudioManager sendMicBufferList:frame.data timeStamp:(CACurrentMediaTime()*1000)];
+                            }
+                        }];
+                    }
+                }
             }
             break;
         }
@@ -583,16 +557,14 @@
             }
         } else {
             // 旋转的方法
-            UIImage *appicon1024 = _waterMarkImage;
-            CIImage *watermarkImage = [[CIImage alloc] initWithCGImage:appicon1024.CGImage];
-            CIFilter *watermarkFilter = [CIFilter filterWithName:@"CISourceOverCompositing"];
-            [watermarkFilter setValue:ciimage forKey:kCIInputBackgroundImageKey];
-            [watermarkFilter setValue:watermarkImage forKey:kCIInputImageKey];
-            CIImage *midImage = watermarkFilter.outputImage;
-            CIImage *wImage = [midImage imageByApplyingCGOrientation:self.rotateOrientation];
+            CIImage *wImage = [ciimage imageByApplyingCGOrientation:self.rotateOrientation];
             CIImage *newImage = [wImage imageByApplyingTransform:CGAffineTransformMakeScale(realWidthScale, realHeightScale)];
-//            CIImage *newImage = [wImage imageByApplyingTransform:CGAffineTransformMakeScale(realWidthScale, realHeightScale)];
-
+            if (self.usingWaterMarkImage && self.watermarkImage) {
+                CIFilter *watermarkFilter = [CIFilter filterWithName:@"CISourceOverCompositing"];
+                [watermarkFilter setValue:newImage forKey:kCIInputBackgroundImageKey];
+                [watermarkFilter setValue:self.watermarkImage forKey:kCIInputImageKey];
+                newImage = watermarkFilter.outputImage;
+            }
             
             CVPixelBufferRef newPixcelBuffer = nil;
             CVReturn ok1 = kCVReturnSuccess;

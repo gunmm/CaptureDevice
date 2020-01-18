@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface WaterMarkCusController : BaseViewController
 
+@property (nonatomic, copy) void(^saveWaterBlock)(BOOL usingWater);
+
 @end
 
 NS_ASSUME_NONNULL_END

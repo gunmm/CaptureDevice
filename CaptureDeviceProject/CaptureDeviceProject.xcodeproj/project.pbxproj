@@ -242,10 +242,9 @@
 		769E25DF231125A200D39537 /* NetWorking.m in Sources */ = {isa = PBXBuildFile; fileRef = 769E25DE231125A200D39537 /* NetWorking.m */; };
 		769E25E32311483900D39537 /* PushFailGuidanceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 769E25E12311483900D39537 /* PushFailGuidanceController.m */; };
 		769E25E42311483900D39537 /* PushFailGuidanceController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 769E25E22311483900D39537 /* PushFailGuidanceController.xib */; };
+		76B45C7523D29B180066C329 /* WaterMarkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B45C7423D29B180066C329 /* WaterMarkView.xib */; };
 		76C9072A22F5C1A8006BA6E5 /* SelectListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 76C9072922F5C1A8006BA6E5 /* SelectListModel.m */; };
 		76D0979623CF466000C8D044 /* appicon1024.png in Resources */ = {isa = PBXBuildFile; fileRef = 761AB8E2230977AF00B97B0C /* appicon1024.png */; };
-		76D0979F23CF56BA00C8D044 /* WaterMarkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76D0979D23CF56BA00C8D044 /* WaterMarkViewController.m */; };
-		76D097A223CF572800C8D044 /* WaterStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76D097A123CF572800C8D044 /* WaterStoryboard.storyboard */; };
 		76DA0B242316D64C0053693F /* MixAudioModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 76DA0B232316D64C0053693F /* MixAudioModel.m */; };
 		CD5A637322FBF3AD00D6A5B1 /* XDXAduioEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = CD5A637122FBF3AD00D6A5B1 /* XDXAduioEncoder.m */; };
 		CD5FFF4723B5DA6100181C50 /* PayManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CD5FFF4623B5DA6100181C50 /* PayManager.m */; };
@@ -777,11 +776,9 @@
 		769E25E02311483900D39537 /* PushFailGuidanceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PushFailGuidanceController.h; sourceTree = "<group>"; };
 		769E25E12311483900D39537 /* PushFailGuidanceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PushFailGuidanceController.m; sourceTree = "<group>"; };
 		769E25E22311483900D39537 /* PushFailGuidanceController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PushFailGuidanceController.xib; sourceTree = "<group>"; };
+		76B45C7423D29B180066C329 /* WaterMarkView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WaterMarkView.xib; sourceTree = "<group>"; };
 		76C9072822F5C1A8006BA6E5 /* SelectListModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelectListModel.h; sourceTree = "<group>"; };
 		76C9072922F5C1A8006BA6E5 /* SelectListModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SelectListModel.m; sourceTree = "<group>"; };
-		76D0979C23CF56BA00C8D044 /* WaterMarkViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaterMarkViewController.h; sourceTree = "<group>"; };
-		76D0979D23CF56BA00C8D044 /* WaterMarkViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WaterMarkViewController.m; sourceTree = "<group>"; };
-		76D097A123CF572800C8D044 /* WaterStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = WaterStoryboard.storyboard; sourceTree = "<group>"; };
 		76DA0B222316D64C0053693F /* MixAudioModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MixAudioModel.h; sourceTree = "<group>"; };
 		76DA0B232316D64C0053693F /* MixAudioModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MixAudioModel.m; sourceTree = "<group>"; };
 		AC56631D271CABDC36A73A69 /* Pods-CaptureDeviceProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptureDeviceProject.debug.xcconfig"; path = "Target Support Files/Pods-CaptureDeviceProject/Pods-CaptureDeviceProject.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1482,9 +1479,6 @@
 				769E25E02311483900D39537 /* PushFailGuidanceController.h */,
 				769E25E12311483900D39537 /* PushFailGuidanceController.m */,
 				769E25E22311483900D39537 /* PushFailGuidanceController.xib */,
-				76D0979C23CF56BA00C8D044 /* WaterMarkViewController.h */,
-				76D0979D23CF56BA00C8D044 /* WaterMarkViewController.m */,
-				76D097A123CF572800C8D044 /* WaterStoryboard.storyboard */,
 				769A812723D08D4A0002AC13 /* WaterMarkCusController.h */,
 				769A812823D08D4A0002AC13 /* WaterMarkCusController.m */,
 				769A812923D08D4A0002AC13 /* WaterMarkCusController.xib */,
@@ -1497,6 +1491,7 @@
 			children = (
 				760FD87623CE03DB0018BFBF /* WaterMarkView.h */,
 				760FD87523CE03DB0018BFBF /* WaterMarkView.m */,
+				76B45C7423D29B180066C329 /* WaterMarkView.xib */,
 				765FCAFF22F5340300948374 /* ClickJumpTableViewCell.h */,
 				765FCB0022F5340300948374 /* ClickJumpTableViewCell.m */,
 				765FCB0122F5340300948374 /* ClickJumpTableViewCell.xib */,
@@ -1805,6 +1800,7 @@
 				769A812B23D08D4A0002AC13 /* WaterMarkCusController.xib in Resources */,
 				7647932222F5B413005B622E /* SelectListViewController.xib in Resources */,
 				765FCB0322F5340300948374 /* ClickJumpTableViewCell.xib in Resources */,
+				76B45C7523D29B180066C329 /* WaterMarkView.xib in Resources */,
 				769E25E42311483900D39537 /* PushFailGuidanceController.xib in Resources */,
 				765FCAD822F51CBF00948374 /* CameraCatchViewController.xib in Resources */,
 				CD97050322DC6D9600132518 /* LaunchScreen.storyboard in Resources */,
@@ -1812,7 +1808,6 @@
 				765FCAED22F5265B00948374 /* captureInfo.plist in Resources */,
 				765FCAFD22F533A000948374 /* ScreenCatchViewController.xib in Resources */,
 				CD97050022DC6D9600132518 /* Assets.xcassets in Resources */,
-				76D097A223CF572800C8D044 /* WaterStoryboard.storyboard in Resources */,
 				765FCB0822F5376100948374 /* SetPushUrlViewController.xib in Resources */,
 				761AB8E3230977AF00B97B0C /* appicon1024.png in Resources */,
 			);
@@ -2122,7 +2117,6 @@
 				760FD87723CE03DB0018BFBF /* WaterMarkView.m in Sources */,
 				7657731F22F5D3C50042A8FF /* ScreenCatchTableFooterView.m in Sources */,
 				765FCAFE22F533A000948374 /* ScreenCatchViewController.m in Sources */,
-				76D0979F23CF56BA00C8D044 /* WaterMarkViewController.m in Sources */,
 				765FCADA22F51CBF00948374 /* CameraCatchHandler.m in Sources */,
 				769A812A23D08D4A0002AC13 /* WaterMarkCusController.m in Sources */,
 				765FCB0222F5340300948374 /* ClickJumpTableViewCell.m in Sources */,

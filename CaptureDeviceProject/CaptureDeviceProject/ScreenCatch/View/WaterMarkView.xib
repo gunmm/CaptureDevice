@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="WaterMarkView">
+            <rect key="frame" x="0.0" y="0.0" width="198" height="50"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ysz-dG-ehs">
+                    <rect key="frame" x="10" y="10" width="178" height="30"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hca-ya-HEl">
+                    <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="20" id="dgN-ZW-Y20"/>
+                        <constraint firstAttribute="width" constant="20" id="htp-wy-RNv"/>
+                    </constraints>
+                    <inset key="imageEdgeInsets" minX="3" minY="3" maxX="3" maxY="3"/>
+                    <state key="normal" image="delete"/>
+                    <connections>
+                        <action selector="deleteBtnAct:" destination="iN0-l3-epB" eventType="touchUpInside" id="Wah-4w-qZa"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="omS-0e-1sy">
+                    <rect key="frame" x="178" y="30" width="20" height="20"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="20" id="eqb-Ss-HWK"/>
+                        <constraint firstAttribute="height" constant="20" id="lXV-5Y-WcK"/>
+                    </constraints>
+                    <inset key="imageEdgeInsets" minX="3" minY="3" maxX="3" maxY="3"/>
+                    <state key="normal" image="refreshRo"/>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="Ysz-dG-ehs" secondAttribute="bottom" constant="10" id="6p6-eN-CWc"/>
+                <constraint firstItem="hca-ya-HEl" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="DGF-W6-d31"/>
+                <constraint firstAttribute="trailing" secondItem="omS-0e-1sy" secondAttribute="trailing" id="F0t-DI-VHe"/>
+                <constraint firstItem="hca-ya-HEl" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Fa3-yJ-mgq"/>
+                <constraint firstItem="Ysz-dG-ehs" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="10" id="Nmo-oc-Xjk"/>
+                <constraint firstAttribute="bottom" secondItem="omS-0e-1sy" secondAttribute="bottom" id="qU9-ud-uNK"/>
+                <constraint firstAttribute="trailing" secondItem="Ysz-dG-ehs" secondAttribute="trailing" constant="10" id="sWY-8J-uQ8"/>
+                <constraint firstItem="Ysz-dG-ehs" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="vaX-2K-iKv"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="deleteBtn" destination="hca-ya-HEl" id="PMc-KC-OYd"/>
+                <outlet property="rotateBtn" destination="omS-0e-1sy" id="mP4-IC-zJ2"/>
+                <outlet property="textLabel" destination="Ysz-dG-ehs" id="wbl-GG-Zug"/>
+            </connections>
+            <point key="canvasLocation" x="228.80000000000001" y="41.379310344827587"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="delete" width="50" height="50"/>
+        <image name="refreshRo" width="50" height="50"/>
+    </resources>
+</document>

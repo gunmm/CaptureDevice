@@ -17,8 +17,7 @@
 #import "NetWorking.h"
 #import "BaseDeviceManager.h"
 #import "PayManager.h"
-#import "WaterMarkView.h"
-#import "WaterMarkViewController.h"
+#import "WaterMarkCusController.h"
 
 @interface ScreenCatchViewController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -55,17 +54,6 @@
     
     [self initData];
     [self initView];
-    
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
-    titleLabel.text = @"s我是";
-    titleLabel.backgroundColor = [UIColor clearColor];
-    UIView *waterMarkView = [[WaterMarkView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
-    CGSize s = titleLabel.bounds.size;
-    UIGraphicsBeginImageContextWithOptions(s, NO, [UIScreen mainScreen].scale);
-    [titleLabel.layer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    [self.userDefaults setObject:UIImagePNGRepresentation(image) forKey:@"waterMarkImage"];
 }
 
 
@@ -82,6 +70,8 @@
     NSInteger applicationVoiceValue = [[self.userDefaults objectForKey:@"applicationVoiceValue"] integerValue] == 0 ? 10 : [[self.userDefaults objectForKey:@"applicationVoiceValue"] integerValue];
     NSInteger micVoiceValue = [[self.userDefaults objectForKey:@"micVoiceValue"] integerValue] == 0 ? 80 : [[self.userDefaults objectForKey:@"micVoiceValue"] integerValue];
     
+    self.hasWaterMark = [[self.userDefaults objectForKey:@"usingWaterMarkImage"] boolValue];
+
     self.screenOrientationdataList = [NSMutableArray array];
     self.applicationVoicedataList = [NSMutableArray array];
     self.micVoicedataList = [NSMutableArray array];
@@ -212,14 +202,11 @@
         };
         [self.navigationController pushViewController:setPushUrlViewController animated:YES];
     } else if (indexPath.section == 2) {
-        UIStoryboard *storyBoard =  [UIStoryboard storyboardWithName:@"WaterStoryboard" bundle:nil];
-        WaterMarkViewController *waterMarkViewController = [storyBoard instantiateInitialViewController];
-        waterMarkViewController.isOpen = self.hasWaterMark;
+        WaterMarkCusController *waterMarkViewController = [[WaterMarkCusController alloc] init];
         [self.navigationController pushViewController:waterMarkViewController animated:YES];
-        waterMarkViewController.changeWaterMarkBlock = ^(BOOL isOpen) {
+        waterMarkViewController.saveWaterBlock = ^(BOOL isOpen) {
             weakSelf.hasWaterMark = isOpen;
             [weakSelf.tableView reloadData];
-            [weakSelf.userDefaults setObject:@"1" forKey:@"hasWaterMark"];
         };
     } else {
         SelectListViewController *selectListViewController = [[SelectListViewController alloc] init];

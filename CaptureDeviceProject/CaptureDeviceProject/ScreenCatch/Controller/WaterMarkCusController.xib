@@ -9,7 +9,10 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WaterMarkCusController">
             <connections>
+                <outlet property="editBtn" destination="fO7-TY-wzd" id="bO5-ES-H6l"/>
+                <outlet property="imageView" destination="tqg-Cg-r9v" id="24O-cl-dNR"/>
                 <outlet property="topView" destination="MbV-ZC-zun" id="ik0-ua-hE7"/>
+                <outlet property="usingBtn" destination="EJz-1R-fvf" id="Jnz-Zr-WGX"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -20,19 +23,40 @@
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MbV-ZC-zun">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="211"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tqg-Cg-r9v">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="211"/>
+                        </imageView>
+                    </subviews>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
+                        <constraint firstItem="tqg-Cg-r9v" firstAttribute="leading" secondItem="MbV-ZC-zun" secondAttribute="leading" id="Taw-z4-JpQ"/>
+                        <constraint firstItem="tqg-Cg-r9v" firstAttribute="top" secondItem="MbV-ZC-zun" secondAttribute="top" id="U5n-kq-baw"/>
                         <constraint firstAttribute="width" secondItem="MbV-ZC-zun" secondAttribute="height" multiplier="16:9" id="UI4-qA-Ect"/>
+                        <constraint firstAttribute="bottom" secondItem="tqg-Cg-r9v" secondAttribute="bottom" id="hiD-hr-SKS"/>
+                        <constraint firstAttribute="trailing" secondItem="tqg-Cg-r9v" secondAttribute="trailing" id="mek-en-TfL"/>
                     </constraints>
                 </view>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fO7-TY-wzd">
-                    <rect key="frame" x="87.5" y="308.5" width="200" height="50"/>
-                    <color key="backgroundColor" systemColor="opaqueSeparatorColor" red="0.77647058820000003" green="0.77647058820000003" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EJz-1R-fvf">
+                    <rect key="frame" x="80" y="241" width="215" height="50"/>
+                    <color key="backgroundColor" red="0.25882352941176467" green="0.2627450980392157" blue="0.31764705882352939" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="50" id="4qf-ZS-JOS"/>
-                        <constraint firstAttribute="width" constant="200" id="9fC-ZK-VkW"/>
+                        <constraint firstAttribute="height" constant="50" id="BAH-wp-Ztt"/>
                     </constraints>
-                    <state key="normal" title="添加"/>
+                    <state key="normal" title="使用水印"/>
+                    <state key="selected" title="添加水印"/>
+                    <connections>
+                        <action selector="usingBtnAct:" destination="-1" eventType="touchUpInside" id="pcI-6x-PYE"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fO7-TY-wzd">
+                    <rect key="frame" x="80" y="311" width="215" height="50"/>
+                    <color key="backgroundColor" red="0.25882352941176467" green="0.2627450980392157" blue="0.31764705882352939" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="50" id="4Zt-3p-EOg"/>
+                    </constraints>
+                    <state key="normal" title="编辑水印"/>
+                    <state key="selected" title="保存水印"/>
                     <connections>
                         <action selector="addBtnAct:" destination="-1" eventType="touchUpInside" id="Iwh-KW-8Qf"/>
                     </connections>
@@ -40,11 +64,15 @@
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="fO7-TY-wzd" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="A5s-2b-gzq"/>
+                <constraint firstItem="fO7-TY-wzd" firstAttribute="top" secondItem="EJz-1R-fvf" secondAttribute="bottom" constant="20" id="2Y3-Tl-RNR"/>
+                <constraint firstItem="fO7-TY-wzd" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="80" id="3O0-CB-WJU"/>
+                <constraint firstAttribute="trailing" secondItem="EJz-1R-fvf" secondAttribute="trailing" constant="80" id="CSg-8g-QtA"/>
                 <constraint firstItem="MbV-ZC-zun" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="RRE-kp-aTh"/>
                 <constraint firstAttribute="trailing" secondItem="MbV-ZC-zun" secondAttribute="trailing" id="V1d-mT-x0s"/>
                 <constraint firstItem="MbV-ZC-zun" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="ZRn-3V-PQa"/>
-                <constraint firstItem="fO7-TY-wzd" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="c36-Wz-eVi"/>
+                <constraint firstItem="EJz-1R-fvf" firstAttribute="top" secondItem="MbV-ZC-zun" secondAttribute="bottom" constant="30" id="a78-hf-Sw2"/>
+                <constraint firstAttribute="trailing" secondItem="fO7-TY-wzd" secondAttribute="trailing" constant="80" id="obS-QJ-anN"/>
+                <constraint firstItem="EJz-1R-fvf" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="80" id="r6L-Wt-JNo"/>
             </constraints>
             <point key="canvasLocation" x="132" y="133"/>
         </view>

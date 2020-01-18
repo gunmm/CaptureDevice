@@ -248,7 +248,7 @@
             break;
     }
     configuration.videoSize = CGSizeMake(width, height);
-    configuration.sessionPreset = [configuration supportSessionPreset:configuration.sessionPreset];
+//    configuration.sessionPreset = [configuration supportSessionPreset:configuration.sessionPreset];
     configuration.videoMaxKeyframeInterval = configuration.videoFrameRate*2;
     configuration.outputImageOrientation = outputImageOrientation;
     CGSize size = configuration.videoSize;
@@ -325,7 +325,9 @@
 - (LFLiveVideoSessionPreset)supportSessionPreset:(LFLiveVideoSessionPreset)sessionPreset {
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
     AVCaptureDevice *inputCamera;
-    NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
+//    NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
+    AVCaptureDeviceDiscoverySession *deviceDiscoverySession =  [AVCaptureDeviceDiscoverySession discoverySessionWithDeviceTypes:@[AVCaptureDeviceTypeBuiltInWideAngleCamera] mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionBack];
+    NSArray *devices = deviceDiscoverySession.devices;
     for (AVCaptureDevice *device in devices){
         if ([device position] == AVCaptureDevicePositionFront){
             inputCamera = device;

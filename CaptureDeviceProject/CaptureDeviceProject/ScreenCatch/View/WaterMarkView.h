@@ -12,6 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface WaterMarkView : UIView
 
+@property (weak, nonatomic) IBOutlet UILabel *textLabel;
+@property (weak, nonatomic) IBOutlet UIButton *deleteBtn;
+@property (weak, nonatomic) IBOutlet UIButton *rotateBtn;
+
 @end
 
 NS_ASSUME_NONNULL_END
