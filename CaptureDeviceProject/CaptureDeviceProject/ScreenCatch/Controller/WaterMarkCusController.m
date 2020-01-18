@@ -21,6 +21,8 @@
 @property (nonatomic, assign) BOOL hasWaterMarkImage;
 @property (nonatomic, assign) BOOL isEditing;
 
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *topViewHeight;
+
 @end
 
 @implementation WaterMarkCusController
@@ -42,6 +44,8 @@
     self.usingBtn.layer.masksToBounds = YES;
     self.editBtn.layer.cornerRadius = 6;
     self.editBtn.layer.masksToBounds = YES;
+    
+    self.topViewHeight.constant = kScreenHeight;
 
     [self setBtnStatus];
     
@@ -55,9 +59,9 @@
         [self.usingBtn setTitle:@"使用水印" forState:UIControlStateNormal];
     }
     
-    if (!self.hasWaterMarkImage) {
+    if (!self.hasWaterMarkImage && !self.isEditing) {
         self.usingBtn.enabled = NO;
-        [self.usingBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        [self.usingBtn setTitleColor:bgColor forState:UIControlStateNormal];
         [self.usingBtn setBackgroundColor:[UIColor grayColor]];
     } else {
         self.usingBtn.enabled = YES;
@@ -76,32 +80,9 @@
                 waterMarkView.textLabel.layer.borderColor = [UIColor clearColor].CGColor;
             }
         }
-        CGFloat width = self.topView.height;
-        CGFloat height = self.topView.width;
 
-        CGFloat widthScale = width/360.0;
-        CGFloat heightScale = height/640.0;
-        CGFloat realWidthScale = 1;
-        CGFloat realHeightScale = 1;
-        
-        if (widthScale > 1 || heightScale > 1) {
-            if (widthScale < heightScale) {
-                realHeightScale = 640.0/height;
-                CGFloat nowWidth = width * 640.0 / height;
-                height = 640.0;
-                realWidthScale = ceilf(nowWidth)/width;
-                width = ceilf(nowWidth);
-            } else {
-                realWidthScale = 360.0/width;
-                CGFloat nowHeight = 360.0 * height / width;
-                width = 360.0;
-                realHeightScale = ceilf(nowHeight)/height;
-                height = ceilf(nowHeight);
-            }
-        }
-        
-        self.topView.backgroundColor = [UIColor clearColor];
-        UIGraphicsBeginImageContextWithOptions(CGSizeMake(height, width), NO, [UIScreen mainScreen].scale);
+//        self.topView.backgroundColor = [UIColor clearColor];
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(kScreenWidth, kScreenHeight), NO, [UIScreen mainScreen].scale);
         [self.topView.layer renderInContext:UIGraphicsGetCurrentContext()];
         UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
@@ -130,10 +111,10 @@
                                                               handler:^(UIAlertAction * action) {
             if (alert.textFields.firstObject.text.length > 0) {
                 WaterMarkView *waterMarkView = [[[NSBundle mainBundle] loadNibNamed:@"WaterMarkView" owner:nil options:nil] lastObject];
+                waterMarkView.frame = CGRectMake(0, kScreenHeight/2, kScreenWidth, 50);
                 waterMarkView.textLabel.text = alert.textFields.firstObject.text;
-                [waterMarkView sizeToFit];
                 [self.topView addSubview:waterMarkView];
-                waterMarkView.center = self.topView.center;
+//                waterMarkView.center = self.topView.center;
             }
         }];
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault

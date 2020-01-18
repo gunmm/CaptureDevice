@@ -448,10 +448,16 @@
         [self pixelBufferPool];
     }
     CIImage *ciimage = [CIImage imageWithCVPixelBuffer:pixelBuffer];
+    if (self.usingWaterMarkImage && self.watermarkImage) {
+        CIFilter *watermarkFilter = [CIFilter filterWithName:@"CISourceOverCompositing"];
+        [watermarkFilter setValue:ciimage forKey:kCIInputBackgroundImageKey];
+        [watermarkFilter setValue:self.watermarkImage forKey:kCIInputImageKey];
+        ciimage = watermarkFilter.outputImage;
+    }
     if (self.rotateOrientation == kCGImagePropertyOrientationUp) {
-        if (realWidthScale == 1 && realHeightScale == 1) {
-            [self.videoEncoder encodeVideoData:pixelBuffer timeStamp:(CACurrentMediaTime()*1000)];
-        } else {
+//        if (realWidthScale == 1 && realHeightScale == 1) {
+//            [self.videoEncoder encodeVideoData:pixelBuffer timeStamp:(CACurrentMediaTime()*1000)];
+//        } else {
             CIImage *newImage = [ciimage imageByApplyingTransform:CGAffineTransformMakeScale(realWidthScale, realHeightScale)];
             CVPixelBufferRef newPixcelBuffer = nil;
             CVReturn ok1 = kCVReturnSuccess;
@@ -479,18 +485,11 @@
             CVPixelBufferRelease(newPixcelBuffer);
             [self.videoEncoder encodeVideoData:pushPixelBuffer timeStamp:(CACurrentMediaTime()*1000)];
             CFRelease(outputSampleBuffer);
-        }
+//        }
     } else {
         // 旋转的方法
         CIImage *wImage = [ciimage imageByApplyingCGOrientation:self.rotateOrientation];
         CIImage *newImage = [wImage imageByApplyingTransform:CGAffineTransformMakeScale(realWidthScale, realHeightScale)];
-        if (self.usingWaterMarkImage && self.watermarkImage) {
-            CIFilter *watermarkFilter = [CIFilter filterWithName:@"CISourceOverCompositing"];
-            [watermarkFilter setValue:newImage forKey:kCIInputBackgroundImageKey];
-            [watermarkFilter setValue:self.watermarkImage forKey:kCIInputImageKey];
-            newImage = watermarkFilter.outputImage;
-        }
-        
         CVPixelBufferRef newPixcelBuffer = nil;
         CVReturn ok1 = kCVReturnSuccess;
         ok1 = kCVReturnSuccess;
