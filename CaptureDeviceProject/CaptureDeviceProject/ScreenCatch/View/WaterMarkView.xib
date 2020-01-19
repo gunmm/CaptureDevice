@@ -43,7 +43,7 @@
                     <state key="normal" image="refreshRo"/>
                 </button>
             </subviews>
-            <color key="backgroundColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="Ysz-dG-ehs" secondAttribute="bottom" constant="10" id="6p6-eN-CWc"/>
                 <constraint firstItem="hca-ya-HEl" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="DGF-W6-d31"/>

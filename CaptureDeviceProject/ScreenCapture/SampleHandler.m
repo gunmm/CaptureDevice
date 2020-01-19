@@ -62,10 +62,6 @@
 
 @property (nonatomic, strong) UIImage *filterImage;
 
-@property (nonatomic, strong) NSMutableArray *videoFrameArray;
-
-@property (nonatomic, assign) BOOL isBStatus;
-
 @property (nonatomic, strong) CIContext *ciContext;
 
 /// 音视频是否对齐
@@ -77,6 +73,8 @@
 
 @property (nonatomic, strong) CIImage *watermarkImage;
 @property (nonatomic, assign) BOOL usingWaterMarkImage;
+@property (nonatomic, assign) CGFloat watermarkImageWidth;
+@property (nonatomic, assign) CGFloat watermarkImageHeight;
 
 @end
 
@@ -219,27 +217,17 @@
     
     [self.socket start];
     self.relativeTimestamps = 0;
-    
 
-    
-    _videoFrameArray = [NSMutableArray array];
-    NSString *urlStr = [_userDefaults objectForKey:@"urlStr"];
-    _isBStatus = [urlStr containsString:@"js.live-send.acg.tv"];
-    
-    if (@available(iOS 13.0, *)) {
-        _isBStatus = NO;
-    }
-    
     self.usingWaterMarkImage = [[_userDefaults objectForKey:@"usingWaterMarkImage"] boolValue];
     if (self.usingWaterMarkImage) {
         NSData *encodedImageStr = [[self.userDefaults objectForKey:@"waterMarkImage"] mutableCopy];
         UIImage *decodedImage = [UIImage imageWithData:encodedImageStr];
         self.watermarkImage = [[CIImage alloc] initWithCGImage:decodedImage.CGImage];
+        self.watermarkImageWidth = CGImageGetWidth(decodedImage.CGImage);
+        self.watermarkImageHeight = CGImageGetHeight(decodedImage.CGImage);
     }
-
-    
-   
 }
+
 
 - (void)broadcastPaused {
     // User has requested to pause the broadcast. Samples will stop being delivered.
@@ -263,7 +251,7 @@
     switch (sampleBufferType) {
         case RPSampleBufferTypeVideo:
         {
-            if ([self getMemoryUsage] > 40) {
+            if ([self getMemoryUsage] > 35) {
                 return;
             }
             if (self.canUpload) {
@@ -272,9 +260,6 @@
         }
             break;
         case RPSampleBufferTypeAudioApp:
-            if (_isBStatus) {
-                return;
-            }
             if (self.canUpload) {
                 //从samplebuffer中获取blockbuffer
                 CMBlockBufferRef blockBuffer = CMSampleBufferGetDataBuffer(sampleBuffer);
@@ -289,7 +274,7 @@
                     CMAudioFormatDescriptionRef audioFormatDes =  (CMAudioFormatDescriptionRef)CMSampleBufferGetFormatDescription(sampleBuffer);
                     AudioStreamBasicDescription inAudioStreamBasicDescription = *(CMAudioFormatDescriptionGetStreamBasicDescription(audioFormatDes));
                     inAudioStreamBasicDescription.mFormatFlags = 0xe;
-                    self.mixAudioManager.appInputFormat = inAudioStreamBasicDescription;
+                    self.audioConfiguration.numberOfChannels = inAudioStreamBasicDescription.mChannelsPerFrame;
                     [self.mixAudioManager sendAppBufferList:[[NSData alloc] initWithBytes:pcmData length:pcmLength] timeStamp:(CACurrentMediaTime()*1000)];
                 }
             }
@@ -313,13 +298,8 @@
                     //                        NSLog(@"***************** %lu", pcmLength);
                     
                     //                        mFormatFlags: 0xc
-                    if (self.isBStatus) {
-                        [self.audioEncoder setCustomInputFormat:inAudioStreamBasicDescription];
-                        NSData *data = [[NSData alloc] initWithBytes:pcmData length:pcmLength];
-                        [self.audioEncoder encodeAudioData:data timeStamp:(CACurrentMediaTime()*1000)];
-                    } else {
+                    {
                         inAudioStreamBasicDescription.mFormatFlags = 0xe;
-                        self.mixAudioManager.micInputFormat = inAudioStreamBasicDescription;
                         if (!self.audioEncoder2) {
                             AudioStreamBasicDescription inputFormat = {0};
                             inputFormat.mSampleRate = 44100;
@@ -349,14 +329,9 @@
                         
                         int64_t pts = (int64_t)((currentTime - 100) * 1000);
                         __weak typeof(self) weakSelf = self;
-
+                        
                         [self.audioEncoder2 encodeAudioWithSourceBuffer:buffers.mBuffers[0].mData sourceBufferSize:buffers.mBuffers[0].mDataByteSize pts:pts completeHandler:^(LFAudioFrame * _Nonnull frame) {
-                            if (weakSelf.isBStatus) {
-                                NSData *data = [[NSData alloc] initWithBytes:pcmData length:pcmLength];
-                                [weakSelf.audioEncoder encodeAudioData:data timeStamp:(CACurrentMediaTime()*1000)];
-                            } else {
-                                [weakSelf.mixAudioManager sendMicBufferList:frame.data timeStamp:(CACurrentMediaTime()*1000)];
-                            }
+                            [weakSelf.mixAudioManager sendMicBufferList:frame.data timeStamp:(CACurrentMediaTime()*1000)];
                         }];
                     }
                 }
@@ -420,6 +395,17 @@
     size_t width = CVPixelBufferGetWidth(pixelBuffer);
     size_t height = CVPixelBufferGetHeight(pixelBuffer);
     
+    CIImage *ciimage = [CIImage imageWithCVPixelBuffer:pixelBuffer];
+    if (self.usingWaterMarkImage && self.watermarkImage) {
+        CGFloat widthScale = width/self.watermarkImageWidth;
+        CGFloat heightScale = height/self.watermarkImageHeight;
+        CIImage *inputImage = [self.watermarkImage imageByApplyingTransform:CGAffineTransformMakeScale(widthScale, heightScale)];
+        CIFilter *watermarkFilter = [CIFilter filterWithName:@"CISourceOverCompositing"];
+        [watermarkFilter setValue:ciimage forKey:kCIInputBackgroundImageKey];
+        [watermarkFilter setValue:inputImage forKey:kCIInputImageKey];
+        ciimage = watermarkFilter.outputImage;
+    }
+    
     CGFloat widthScale = width/720.0;
     CGFloat heightScale = height/1280.0;
     CGFloat realWidthScale = 1;
@@ -446,13 +432,6 @@
     if (!_hasPixelBufferPool) {
         _hasPixelBufferPool = YES;
         [self pixelBufferPool];
-    }
-    CIImage *ciimage = [CIImage imageWithCVPixelBuffer:pixelBuffer];
-    if (self.usingWaterMarkImage && self.watermarkImage) {
-        CIFilter *watermarkFilter = [CIFilter filterWithName:@"CISourceOverCompositing"];
-        [watermarkFilter setValue:ciimage forKey:kCIInputBackgroundImageKey];
-        [watermarkFilter setValue:self.watermarkImage forKey:kCIInputImageKey];
-        ciimage = watermarkFilter.outputImage;
     }
     if (self.rotateOrientation == kCGImagePropertyOrientationUp) {
 //        if (realWidthScale == 1 && realHeightScale == 1) {
@@ -488,8 +467,8 @@
 //        }
     } else {
         // 旋转的方法
-        CIImage *wImage = [ciimage imageByApplyingCGOrientation:self.rotateOrientation];
-        CIImage *newImage = [wImage imageByApplyingTransform:CGAffineTransformMakeScale(realWidthScale, realHeightScale)];
+        CIImage *wImage = [ciimage imageByApplyingTransform:CGAffineTransformMakeScale(realWidthScale, realHeightScale)];
+        CIImage *newImage = [wImage imageByApplyingCGOrientation:self.rotateOrientation];
         CVPixelBufferRef newPixcelBuffer = nil;
         CVReturn ok1 = kCVReturnSuccess;
         ok1 = kCVReturnSuccess;
@@ -536,8 +515,8 @@
 
 #pragma mark -- MixAudioManagerDelegate
 - (void)mixDidOutputModel:(MixAudioModel *)mixAudioModel {
-    [self.audioEncoder setCustomInputFormat:self.mixAudioManager.currentInputFormat];
-    [self.audioEncoder encodeAudioData:mixAudioModel.videoData timeStamp:mixAudioModel.timeStamp];
+//    [self.audioEncoder setCustomInputFormat:self.mixAudioManager.currentInputFormat];
+    [self.audioEncoder encodeAudioData:mixAudioModel.videoData timeStamp:(CACurrentMediaTime()*1000)];
 }
 
 #pragma mark -- LFVideoEncodingDelegate

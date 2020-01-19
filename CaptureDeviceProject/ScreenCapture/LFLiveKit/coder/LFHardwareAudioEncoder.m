@@ -55,10 +55,6 @@
     _aacDeleage = delegate;
 }
 
-- (void)setCustomInputFormat:(AudioStreamBasicDescription)customInputFormat {
-    _childCustomInputFormat = customInputFormat;
-}
-
 - (void)encodeAudioData:(nullable NSData*)audioData timeStamp:(uint64_t)timeStamp {
     if (![self createAudioConvert]) {
         return;
@@ -148,27 +144,27 @@
     
     AudioStreamBasicDescription inputFormat = {0};
     
-    if (_childCustomInputFormat.mBitsPerChannel > 0 ) {
-        inputFormat.mSampleRate = _childCustomInputFormat.mSampleRate;
-        inputFormat.mFormatID = _childCustomInputFormat.mFormatID;
-        inputFormat.mFormatFlags = _childCustomInputFormat.mFormatFlags;
-        _configuration.numberOfChannels = _childCustomInputFormat.mChannelsPerFrame;
-        inputFormat.mChannelsPerFrame = (UInt32)_configuration.numberOfChannels;
-        inputFormat.mFramesPerPacket = 1;
-        inputFormat.mBitsPerChannel = 16;
-        inputFormat.mBytesPerFrame = inputFormat.mBitsPerChannel / 8 * inputFormat.mChannelsPerFrame;
-        inputFormat.mBytesPerPacket = inputFormat.mBytesPerFrame * inputFormat.mFramesPerPacket;
-        
-    } else {
+//    if (_childCustomInputFormat.mBitsPerChannel > 0 ) {
+//        inputFormat.mSampleRate = _childCustomInputFormat.mSampleRate;
+//        inputFormat.mFormatID = _childCustomInputFormat.mFormatID;
+//        inputFormat.mFormatFlags = _childCustomInputFormat.mFormatFlags;
+//        _configuration.numberOfChannels = _childCustomInputFormat.mChannelsPerFrame;
+//        inputFormat.mChannelsPerFrame = (UInt32)_configuration.numberOfChannels;
+//        inputFormat.mFramesPerPacket = 1;
+//        inputFormat.mBitsPerChannel = 16;
+//        inputFormat.mBytesPerFrame = inputFormat.mBitsPerChannel / 8 * inputFormat.mChannelsPerFrame;
+//        inputFormat.mBytesPerPacket = inputFormat.mBytesPerFrame * inputFormat.mFramesPerPacket;
+//
+//    } else {
         inputFormat.mSampleRate = _configuration.audioSampleRate;
         inputFormat.mFormatID = kAudioFormatLinearPCM;
-        inputFormat.mFormatFlags = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagsNativeEndian | kAudioFormatFlagIsPacked;
+        inputFormat.mFormatFlags = 0xe;
         inputFormat.mChannelsPerFrame = (UInt32)_configuration.numberOfChannels;
         inputFormat.mFramesPerPacket = 1;
         inputFormat.mBitsPerChannel = 16;
         inputFormat.mBytesPerFrame = inputFormat.mBitsPerChannel / 8 * inputFormat.mChannelsPerFrame;
         inputFormat.mBytesPerPacket = inputFormat.mBytesPerFrame * inputFormat.mFramesPerPacket;
-    }
+//    }
     
     AudioStreamBasicDescription outputFormat; // 这里开始是输出音频格式
     memset(&outputFormat, 0, sizeof(outputFormat));

@@ -23,10 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) id<MixAudioManagerDelegate> delegate;
 
-@property (nonatomic, assign) AudioStreamBasicDescription micInputFormat;
-@property (nonatomic, assign) AudioStreamBasicDescription appInputFormat;
-@property (nonatomic, assign) AudioStreamBasicDescription currentInputFormat;
-
 - (void)sendMicBufferList:(NSData *)audioData timeStamp:(uint64_t)timeStamp;
 - (void)sendAppBufferList:(NSData *)audioData timeStamp:(uint64_t)timeStamp;
 

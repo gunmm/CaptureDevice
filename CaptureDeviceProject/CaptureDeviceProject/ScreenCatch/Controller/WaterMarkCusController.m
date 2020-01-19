@@ -22,6 +22,7 @@
 @property (nonatomic, assign) BOOL isEditing;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *topViewHeight;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *bgViewHeight;
 
 @end
 
@@ -45,7 +46,8 @@
     self.editBtn.layer.cornerRadius = 6;
     self.editBtn.layer.masksToBounds = YES;
     
-    self.topViewHeight.constant = kScreenHeight;
+    self.topViewHeight.constant = kScreenHeight/2;
+    self.bgViewHeight.constant = kScreenHeight/2 + 300;
 
     [self setBtnStatus];
     
@@ -81,8 +83,8 @@
             }
         }
 
-//        self.topView.backgroundColor = [UIColor clearColor];
-        UIGraphicsBeginImageContextWithOptions(CGSizeMake(kScreenWidth, kScreenHeight), NO, [UIScreen mainScreen].scale);
+        self.topView.backgroundColor = [UIColor clearColor];
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(kScreenWidth/2, kScreenHeight/2), NO, [UIScreen mainScreen].scale*2);
         [self.topView.layer renderInContext:UIGraphicsGetCurrentContext()];
         UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
@@ -111,7 +113,7 @@
                                                               handler:^(UIAlertAction * action) {
             if (alert.textFields.firstObject.text.length > 0) {
                 WaterMarkView *waterMarkView = [[[NSBundle mainBundle] loadNibNamed:@"WaterMarkView" owner:nil options:nil] lastObject];
-                waterMarkView.frame = CGRectMake(0, kScreenHeight/2, kScreenWidth, 50);
+                waterMarkView.frame = CGRectMake(0, kScreenHeight/4, kScreenWidth/2, 50);
                 waterMarkView.textLabel.text = alert.textFields.firstObject.text;
                 [self.topView addSubview:waterMarkView];
 //                waterMarkView.center = self.topView.center;

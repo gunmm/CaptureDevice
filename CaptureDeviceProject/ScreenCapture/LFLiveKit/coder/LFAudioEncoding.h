@@ -12,7 +12,6 @@
 #import "LFLiveAudioConfiguration.h"
 
 
-
 @protocol LFAudioEncoding;
 /// 编码器编码后回调
 @protocol LFAudioEncodingDelegate <NSObject>
@@ -29,6 +28,5 @@
 - (nullable instancetype)initWithAudioStreamConfiguration:(nullable LFLiveAudioConfiguration *)configuration;
 - (void)setDelegate:(nullable id<LFAudioEncodingDelegate>)delegate;
 - (nullable NSData *)adtsData:(NSInteger)channel rawDataLength:(NSInteger)rawDataLength;
-- (void)setCustomInputFormat:(AudioStreamBasicDescription)customInputFormat;
 @end
 

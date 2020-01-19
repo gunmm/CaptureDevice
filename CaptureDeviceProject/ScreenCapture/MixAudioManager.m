@@ -86,7 +86,6 @@
 
 - (void)sendAppBufferList:(NSData *)audioData timeStamp:(uint64_t)timeStamp {
     NSInteger kLength = 2048;
-    self.currentInputFormat = self.appInputFormat;
     if (@available(iOS 13.0, *)) {
         if (_micModelArray.count > 0) {
             kLength = 4096;

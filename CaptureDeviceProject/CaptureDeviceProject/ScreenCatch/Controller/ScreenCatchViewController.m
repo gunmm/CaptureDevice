@@ -123,7 +123,12 @@
 #pragma mark -- UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 3;
+    UIDevice *device = [[UIDevice alloc] init];
+
+    if ([device.model isEqualToString:@"iPhone"]) {
+        return 3;
+    }
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
