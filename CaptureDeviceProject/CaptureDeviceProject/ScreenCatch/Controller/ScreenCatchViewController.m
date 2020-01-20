@@ -42,6 +42,7 @@
 @property (nonatomic, strong) NSUserDefaults *userDefaults;
 
 @property (nonatomic, strong) ScreenCatchTableFooterView *footerView;
+@property (nonatomic, strong) UIDevice *device;
 
 @end
 
@@ -51,7 +52,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.title = @"录屏推流";
-    
+    self.device = [[UIDevice alloc] init];
     [self initData];
     [self initView];
 }
@@ -123,9 +124,7 @@
 #pragma mark -- UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    UIDevice *device = [[UIDevice alloc] init];
-
-    if ([device.model isEqualToString:@"iPhone"]) {
+    if ([self.device.model isEqualToString:@"iPhone"]) {
         return 3;
     }
     return 2;
@@ -169,14 +168,14 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    if (section == 2) {
+    if (([self.device.model isEqualToString:@"iPhone"] && section == 2) || (![self.device.model isEqualToString:@"iPhone"] && section == 1)) {
         return 300;
     }
     return 0.001f;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    if (section == 2) {
+    if (([self.device.model isEqualToString:@"iPhone"] && section == 2) || (![self.device.model isEqualToString:@"iPhone"] && section == 1)) {
         if (self.urlStr.length > 0) {
             UserInfoKeyChain *userInfoKeyChain = [UserInfoKeyChain keychainInstance];
             long expirationTimeLong = [userInfoKeyChain.expirationTime longValue];
