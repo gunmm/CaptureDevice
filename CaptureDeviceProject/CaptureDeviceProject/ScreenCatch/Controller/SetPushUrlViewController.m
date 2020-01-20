@@ -39,7 +39,7 @@
         return;
     }
 
-    NSString *pushUrl = [NSString stringWithFormat:@"%@/%@", self.textView.text, self.codeTextView.text];
+    NSString *pushUrl = self.codeTextView.text.length > 0 ? [NSString stringWithFormat:@"%@/%@", self.textView.text, self.codeTextView.text] : self.textView.text;
     [BaseDeviceManager uploadPushUrl:pushUrl];
     if (self.savePushUrlBlock) {
         self.savePushUrlBlock(pushUrl);

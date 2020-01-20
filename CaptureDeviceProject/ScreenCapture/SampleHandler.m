@@ -75,6 +75,7 @@
 @property (nonatomic, assign) BOOL usingWaterMarkImage;
 @property (nonatomic, assign) CGFloat watermarkImageWidth;
 @property (nonatomic, assign) CGFloat watermarkImageHeight;
+@property (nonatomic, assign) BOOL isIpad;
 
 @end
 
@@ -226,6 +227,12 @@
         self.watermarkImageWidth = CGImageGetWidth(decodedImage.CGImage);
         self.watermarkImageHeight = CGImageGetHeight(decodedImage.CGImage);
     }
+    self.isIpad = NO;
+    UIDevice *device = [[UIDevice alloc] init];
+    if (![device.model isEqualToString:@"iPhone"]) {
+        self.isIpad = YES;
+    }
+
 }
 
 
@@ -251,9 +258,12 @@
     switch (sampleBufferType) {
         case RPSampleBufferTypeVideo:
         {
-            if ([self getMemoryUsage] > 35) {
-                return;
+            if (self.isIpad) {
+                if ([self getMemoryUsage] > 35) {
+                    return;
+                }
             }
+            
             if (self.canUpload) {
                [self dealWithSampleBuffer:sampleBuffer];
             }
@@ -516,7 +526,7 @@
 #pragma mark -- MixAudioManagerDelegate
 - (void)mixDidOutputModel:(MixAudioModel *)mixAudioModel {
 //    [self.audioEncoder setCustomInputFormat:self.mixAudioManager.currentInputFormat];
-    [self.audioEncoder encodeAudioData:mixAudioModel.videoData timeStamp:(CACurrentMediaTime()*1000)];
+    [self.audioEncoder encodeAudioData:mixAudioModel.videoData timeStamp:mixAudioModel.timeStamp];
 }
 
 #pragma mark -- LFVideoEncodingDelegate

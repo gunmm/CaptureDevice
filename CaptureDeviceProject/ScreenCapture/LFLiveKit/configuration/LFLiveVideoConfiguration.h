@@ -95,7 +95,7 @@ typedef NS_ENUM (NSUInteger, LFLiveVideoQuality){
 @property (nonatomic, assign) LFLiveVideoSessionPreset sessionPreset;
 
 ///< ≈sde3分辨率
-@property (nonatomic, assign, readonly) NSString *avSessionPreset;
+@property (nonatomic, copy, readonly) NSString *avSessionPreset;
 
 ///< 是否是横屏
 @property (nonatomic, assign, readonly) BOOL landscape;
