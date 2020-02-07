@@ -32,7 +32,7 @@
 }
 
 - (void)getRequestAppleProduct {
-    NSArray *product = @[@"com.gunmm.amonth", @"com.gunmm.lifelong"];
+    NSArray *product = @[@"com.gunmm.amonth", @"com.gunmm.ayear",@"com.gunmm.lifelong"];
     NSSet *nsset = [NSSet setWithArray:product];
     // 8.初始化请求
     SKProductsRequest *request = [[SKProductsRequest alloc] initWithProductIdentifiers:nsset];
@@ -165,6 +165,9 @@
     
     if ([product isEqualToString:@"com.gunmm.lifelong"]) {
         long expirationTimeLong = baseTimeLong + 50 * 365 * 24 * 3600;
+        userInfoKeyChain.expirationTime = [NSString stringWithFormat:@"%ld", expirationTimeLong];
+    } else if ([product isEqualToString:@"com.gunmm.ayear"]) {
+        long expirationTimeLong = baseTimeLong + 365 * 24 * 3600;
         userInfoKeyChain.expirationTime = [NSString stringWithFormat:@"%ld", expirationTimeLong];
     } else {
         long expirationTimeLong = baseTimeLong + 31 * 24 * 3600;
