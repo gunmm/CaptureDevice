@@ -407,8 +407,15 @@
     
     CIImage *ciimage = [CIImage imageWithCVPixelBuffer:pixelBuffer];
     if (self.usingWaterMarkImage && self.watermarkImage) {
-        CGFloat widthScale = width/self.watermarkImageWidth;
-        CGFloat heightScale = height/self.watermarkImageHeight;
+        CGFloat widthScale;
+        CGFloat heightScale;
+        if (self.watermarkImageWidth > width) {
+            widthScale = width/self.watermarkImageWidth;
+            heightScale = height/self.watermarkImageHeight;
+        } else {
+            widthScale = self.watermarkImageWidth/width;
+            heightScale = self.watermarkImageHeight/height;
+        }
         CIImage *inputImage = [self.watermarkImage imageByApplyingTransform:CGAffineTransformMakeScale(widthScale, heightScale)];
         CIFilter *watermarkFilter = [CIFilter filterWithName:@"CISourceOverCompositing"];
         [watermarkFilter setValue:ciimage forKey:kCIInputBackgroundImageKey];
@@ -436,13 +443,22 @@
             height = ceilf(nowHeight);
         }
     }
+    BOOL resetPool = NO;
+    if (self.videoWidth != width || self.videoHeight != height) {
+        resetPool = YES;
+    }
+
     self.videoWidth = width;
     self.videoHeight = height;
     
     if (!_hasPixelBufferPool) {
         _hasPixelBufferPool = YES;
         [self pixelBufferPool];
+    } else if (resetPool) {
+        CFRelease(_pixelBufferPool);
+        [self pixelBufferPool];
     }
+
     if (self.rotateOrientation == kCGImagePropertyOrientationUp) {
 //        if (realWidthScale == 1 && realHeightScale == 1) {
 //            [self.videoEncoder encodeVideoData:pixelBuffer timeStamp:(CACurrentMediaTime()*1000)];
