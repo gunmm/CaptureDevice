@@ -603,16 +603,16 @@
     if (self.canUpload) {
         NSUInteger videoBitRate = [self.videoEncoder videoBitRate];
         if (status == LFLiveBuffferDecline) {
-//            if (videoBitRate < _videoConfiguration.videoMaxBitRate) {
-//                videoBitRate = videoBitRate + 50 * 1000;
-//                [self.videoEncoder setVideoBitRate:videoBitRate];
+            if (videoBitRate < _videoConfiguration.videoMaxBitRate) {
+                videoBitRate = videoBitRate + 50 * 1000;
+                [self.videoEncoder setVideoBitRate:videoBitRate];
 //                NSLog(@"Increase bitrate %@", @(videoBitRate));
-//            }
+            }
         } else {
             if (videoBitRate > self.videoConfiguration.videoMinBitRate) {
-                videoBitRate = videoBitRate - 100 * 1000;
+                videoBitRate = videoBitRate - 200 * 1000;
                 [self.videoEncoder setVideoBitRate:videoBitRate];
-                NSLog(@"Decline bitrate %@", @(videoBitRate));
+//                NSLog(@"Decline bitrate %@", @(videoBitRate));
             }
         }
     }
