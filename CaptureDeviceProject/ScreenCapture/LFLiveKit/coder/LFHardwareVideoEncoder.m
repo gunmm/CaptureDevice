@@ -75,7 +75,7 @@
 - (void)setVideoBitRate:(NSInteger)videoBitRate {
     if(_isBackGround) return;
     VTSessionSetProperty(compressionSession, kVTCompressionPropertyKey_AverageBitRate, (__bridge CFTypeRef)@(videoBitRate));
-    NSArray *limit = @[@(_configuration.videoBitRate*1.5/8), @(1)];
+    NSArray *limit = @[@(videoBitRate*1.5/8), @(1)];
     VTSessionSetProperty(compressionSession, kVTCompressionPropertyKey_DataRateLimits, (__bridge CFArrayRef)limit);
     _currentVideoBitRate = videoBitRate;
 }
