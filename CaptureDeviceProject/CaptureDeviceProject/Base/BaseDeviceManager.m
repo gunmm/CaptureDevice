@@ -10,6 +10,7 @@
 #import "NetWorking.h"
 #import "sys/utsname.h"
 #import "PayManager.h"
+#import <StoreKit/StoreKit.h>
 
 @implementation BaseDeviceManager
 
@@ -51,11 +52,20 @@
     }];
     
     long expirationTimeLong = [userInfoKeyChain.expirationTime longValue];
+    long downLoadTimeLong = [userInfoKeyChain.downLoadTime longValue];
+
     NSDate *dateNow = [NSDate date];//现在时间
     long dateNowTimeLong = [dateNow timeIntervalSince1970];
     if (dateNowTimeLong > expirationTimeLong) {
         [[PayManager manager] getRequestAppleProduct];
     }
+    
+#if !DEBUG
+    if (expirationTimeLong - downLoadTimeLong > 7 * 24 * 3600) {
+        [SKStoreReviewController requestReview];
+    }
+#endif
+    
 }
 
 + (void)uploadPushUrl:(NSString *)pushUrlStr {
