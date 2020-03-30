@@ -606,13 +606,18 @@
             if (videoBitRate < _videoConfiguration.videoMaxBitRate) {
                 videoBitRate = videoBitRate + 50 * 1000;
                 [self.videoEncoder setVideoBitRate:videoBitRate];
-//                NSLog(@"Increase bitrate %@", @(videoBitRate));
+#if DEBUG
+                NSLog(@"Increase bitrate %@", @(videoBitRate));
+#endif
+                
             }
         } else {
             if (videoBitRate > self.videoConfiguration.videoMinBitRate) {
                 videoBitRate = videoBitRate - 200 * 1000;
                 [self.videoEncoder setVideoBitRate:videoBitRate];
-//                NSLog(@"Decline bitrate %@", @(videoBitRate));
+#if DEBUG
+                NSLog(@"Decline bitrate %@", @(videoBitRate));
+#endif
             }
         }
     }

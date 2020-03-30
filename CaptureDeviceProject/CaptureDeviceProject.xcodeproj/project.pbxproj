@@ -924,13 +924,13 @@
 		763C0F622361DF4700C00E56 /* publish */ = {
 			isa = PBXGroup;
 			children = (
-				763C0F632361DF4700C00E56 /* LFStreamRTMPSocket.h */,
-				763C0F642361DF4700C00E56 /* NSMutableArray+LFAdd.m */,
 				763C0F652361DF4700C00E56 /* LFStreamingBuffer.h */,
+				763C0F692361DF4700C00E56 /* LFStreamingBuffer.m */,
+				763C0F632361DF4700C00E56 /* LFStreamRTMPSocket.h */,
 				763C0F662361DF4700C00E56 /* LFStreamRtmpSocket.m */,
 				763C0F672361DF4700C00E56 /* LFStreamSocket.h */,
 				763C0F682361DF4700C00E56 /* NSMutableArray+LFAdd.h */,
-				763C0F692361DF4700C00E56 /* LFStreamingBuffer.m */,
+				763C0F642361DF4700C00E56 /* NSMutableArray+LFAdd.m */,
 			);
 			path = publish;
 			sourceTree = "<group>";
