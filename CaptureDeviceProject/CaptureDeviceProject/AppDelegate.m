@@ -65,11 +65,15 @@
     
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    if (@available(iOS 13.0, *)) {
+        self.window.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+    } else {
+        // Fallback on earlier versions
+    }
     [self.window makeKeyAndVisible];
     ScreenCatchViewController *screenCatchViewController = [[ScreenCatchViewController alloc] init];
     BaseNavigationController *screenCatchNav = [[BaseNavigationController alloc] initWithRootViewController:screenCatchViewController];
     self.window.rootViewController = screenCatchNav;
-    
     [[[NSURLSession sharedSession] dataTaskWithURL:[NSURL URLWithString:@"https://www.baidu.com"] completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSLog(@"");
     }] resume];
