@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MixAudioManager : NSObject
 
 @property (nonatomic, weak) id<MixAudioManagerDelegate> delegate;
+@property (nonatomic, assign) AudioStreamBasicDescription micAudioStreamBasicDescription;
+@property (nonatomic, assign) AudioStreamBasicDescription appAudioStreamBasicDescription;
 
 - (void)sendMicBufferList:(NSData *)audioData timeStamp:(uint64_t)timeStamp;
 - (void)sendAppBufferList:(NSData *)audioData timeStamp:(uint64_t)timeStamp;

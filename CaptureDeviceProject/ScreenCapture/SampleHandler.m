@@ -284,6 +284,7 @@
                     CMAudioFormatDescriptionRef audioFormatDes =  (CMAudioFormatDescriptionRef)CMSampleBufferGetFormatDescription(sampleBuffer);
                     AudioStreamBasicDescription inAudioStreamBasicDescription = *(CMAudioFormatDescriptionGetStreamBasicDescription(audioFormatDes));
                     inAudioStreamBasicDescription.mFormatFlags = 0xe;
+                    self.mixAudioManager.appAudioStreamBasicDescription = inAudioStreamBasicDescription;
                     self.audioConfiguration.numberOfChannels = inAudioStreamBasicDescription.mChannelsPerFrame;
                     [self.mixAudioManager sendAppBufferList:[[NSData alloc] initWithBytes:pcmData length:pcmLength] timeStamp:(CACurrentMediaTime()*1000)];
                 }
@@ -305,8 +306,7 @@
                 } else {
                     CMAudioFormatDescriptionRef audioFormatDes =  (CMAudioFormatDescriptionRef)CMSampleBufferGetFormatDescription(sampleBuffer);
                     AudioStreamBasicDescription inAudioStreamBasicDescription = *(CMAudioFormatDescriptionGetStreamBasicDescription(audioFormatDes));
-                    //                        NSLog(@"***************** %lu", pcmLength);
-                    
+                    self.mixAudioManager.micAudioStreamBasicDescription = inAudioStreamBasicDescription;
                     //                        mFormatFlags: 0xc
                     {
                         inAudioStreamBasicDescription.mFormatFlags = 0xe;
