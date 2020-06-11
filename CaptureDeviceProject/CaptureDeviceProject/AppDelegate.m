@@ -58,6 +58,7 @@
             }
         }];
     }
+//    
     else if(videoAuthStatus == AVAuthorizationStatusRestricted || videoAuthStatus == AVAuthorizationStatusDenied) {// 未授权
     }
     else{
