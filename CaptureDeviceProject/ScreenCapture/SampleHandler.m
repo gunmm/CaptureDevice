@@ -478,7 +478,6 @@
             }
             
             if (ok1 == kCVReturnWouldExceedAllocationThreshold) {
-                NSLog(@"-------------------");
                 return;
             }
             CVPixelBufferLockBaseAddress(newPixcelBuffer, 0);
@@ -509,7 +508,6 @@
         }
         
         if (ok1 == kCVReturnWouldExceedAllocationThreshold) {
-            NSLog(@"-------------------");
             return;
         }
         CVPixelBufferLockBaseAddress(newPixcelBuffer, 0);
