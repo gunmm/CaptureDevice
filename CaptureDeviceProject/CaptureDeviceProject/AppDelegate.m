@@ -80,7 +80,7 @@
     }] resume];
     
     [self registerAPN];
-    [BaseDeviceManager uploadDeviceInfo];
+//    [BaseDeviceManager uploadDeviceInfo];
     return YES;
 }
 

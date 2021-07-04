@@ -9,62 +9,62 @@
 #import "BaseDeviceManager.h"
 #import "NetWorking.h"
 #import "sys/utsname.h"
-#import "PayManager.h"
+//#import "PayManager.h"
 #import <StoreKit/StoreKit.h>
 
 @implementation BaseDeviceManager
 
 + (void)uploadDeviceInfo {
-    NSString *urlStr = @"updatePingMuUser";
-    UIDevice *device = [[UIDevice alloc] init];
-    UserInfoKeyChain *userInfoKeyChain = [UserInfoKeyChain keychainInstance];
-    NSString *deviceId = userInfoKeyChain.deviceId;
-    if (userInfoKeyChain.isCreate.length > 0) {
-        urlStr = @"addPingMuUser";
-    }
-    NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-    NSString *build = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
-    NSString *currentVersion = [NSString stringWithFormat:@"%@.%@", version, build];
-    
-    NSMutableDictionary *param = [NSMutableDictionary dictionary];
-    [param setObject:deviceId forKey:@"deviceId"];
-    [param setObject:currentVersion forKey:@"pingMuVersion"];
-    [param setObject:device.systemVersion forKey:@"systemVersion"];
-    [BaseDeviceManager checkString:device.systemVersion];
-    [param setObject:device.name forKey:@"name"];
-    [param setObject:device.model forKey:@"model"];
-    [param setObject:device.localizedModel forKey:@"localizedModel"];
-    [param setObject:device.systemName forKey:@"systemName"];
-    struct utsname systemInfo;
-    uname(&systemInfo);
-    NSString *deviceString = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
-    [param setObject:deviceString forKey:@"deviceString"];
-    [param setObject:@"1" forKey:@"signValue"];
-#if DEBUG
-    [param setObject:@"0" forKey:@"signValue"];
-#endif
-    
-    [param setObject:[NavBgImage getTimestamp:userInfoKeyChain.downLoadTime] forKey:@"downLoadTime"];
-    [param setObject:[NavBgImage getTimestamp:userInfoKeyChain.expirationTime] forKey:@"expirationTime"];
-
-    [NetWorking bgPostDataWithParameters:param withUrl:urlStr withBlock:^(id result) {
-    } withFailedBlock:^(NSString *errorResult) {
-    }];
-    
-    long expirationTimeLong = [userInfoKeyChain.expirationTime longValue];
-    long downLoadTimeLong = [userInfoKeyChain.downLoadTime longValue];
-
-    NSDate *dateNow = [NSDate date];//现在时间
-    long dateNowTimeLong = [dateNow timeIntervalSince1970];
-    if (dateNowTimeLong > expirationTimeLong) {
-        [[PayManager manager] getRequestAppleProduct];
-    }
-    
-#if !DEBUG
-    if (expirationTimeLong - downLoadTimeLong > 7 * 24 * 3600) {
-        [SKStoreReviewController requestReview];
-    }
-#endif
+//    NSString *urlStr = @"updatePingMuUser";
+//    UIDevice *device = [[UIDevice alloc] init];
+//    UserInfoKeyChain *userInfoKeyChain = [UserInfoKeyChain keychainInstance];
+//    NSString *deviceId = userInfoKeyChain.deviceId;
+//    if (userInfoKeyChain.isCreate.length > 0) {
+//        urlStr = @"addPingMuUser";
+//    }
+//    NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+//    NSString *build = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+//    NSString *currentVersion = [NSString stringWithFormat:@"%@.%@", version, build];
+//
+//    NSMutableDictionary *param = [NSMutableDictionary dictionary];
+//    [param setObject:deviceId forKey:@"deviceId"];
+//    [param setObject:currentVersion forKey:@"pingMuVersion"];
+//    [param setObject:device.systemVersion forKey:@"systemVersion"];
+//    [BaseDeviceManager checkString:device.systemVersion];
+//    [param setObject:device.name forKey:@"name"];
+//    [param setObject:device.model forKey:@"model"];
+//    [param setObject:device.localizedModel forKey:@"localizedModel"];
+//    [param setObject:device.systemName forKey:@"systemName"];
+//    struct utsname systemInfo;
+//    uname(&systemInfo);
+//    NSString *deviceString = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+//    [param setObject:deviceString forKey:@"deviceString"];
+//    [param setObject:@"1" forKey:@"signValue"];
+//#if DEBUG
+//    [param setObject:@"0" forKey:@"signValue"];
+//#endif
+//
+//    [param setObject:[NavBgImage getTimestamp:userInfoKeyChain.downLoadTime] forKey:@"downLoadTime"];
+//    [param setObject:[NavBgImage getTimestamp:userInfoKeyChain.expirationTime] forKey:@"expirationTime"];
+//
+//    [NetWorking bgPostDataWithParameters:param withUrl:urlStr withBlock:^(id result) {
+//    } withFailedBlock:^(NSString *errorResult) {
+//    }];
+//
+//    long expirationTimeLong = [userInfoKeyChain.expirationTime longValue];
+//    long downLoadTimeLong = [userInfoKeyChain.downLoadTime longValue];
+//
+//    NSDate *dateNow = [NSDate date];//现在时间
+//    long dateNowTimeLong = [dateNow timeIntervalSince1970];
+//    if (dateNowTimeLong > expirationTimeLong) {
+//        [[PayManager manager] getRequestAppleProduct];
+//    }
+//
+//#if !DEBUG
+//    if (expirationTimeLong - downLoadTimeLong > 7 * 24 * 3600) {
+//        [SKStoreReviewController requestReview];
+//    }
+//#endif
     
 }
 

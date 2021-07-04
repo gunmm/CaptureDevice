@@ -16,7 +16,7 @@
 #import "PushFailGuidanceController.h"
 #import "NetWorking.h"
 #import "BaseDeviceManager.h"
-#import "PayManager.h"
+//#import "PayManager.h"
 #import "WaterMarkCusController.h"
 
 @interface ScreenCatchViewController () <UITableViewDelegate, UITableViewDataSource>
@@ -177,15 +177,15 @@
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     if (([self.device.model isEqualToString:@"iPhone"] && section == 2) || (![self.device.model isEqualToString:@"iPhone"] && section == 1)) {
         if (self.urlStr.length > 0) {
-            UserInfoKeyChain *userInfoKeyChain = [UserInfoKeyChain keychainInstance];
-            long expirationTimeLong = [userInfoKeyChain.expirationTime longValue];
-            NSDate *dateNow = [NSDate date];//现在时间
-            long dateNowTimeLong = [dateNow timeIntervalSince1970];
-            if (dateNowTimeLong > expirationTimeLong) {
-                [[PayManager manager] getRequestAppleProduct];
-            } else {
+//            UserInfoKeyChain *userInfoKeyChain = [UserInfoKeyChain keychainInstance];
+//            long expirationTimeLong = [userInfoKeyChain.expirationTime longValue];
+//            NSDate *dateNow = [NSDate date];//现在时间
+//            long dateNowTimeLong = [dateNow timeIntervalSince1970];
+//            if (dateNowTimeLong > expirationTimeLong) {
+//                [[PayManager manager] getRequestAppleProduct];
+//            } else {
                 self.footerView.showBtn = YES;
-            }
+//            }
         } else {
             self.footerView.showBtn = NO;
         }

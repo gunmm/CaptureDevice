@@ -25,9 +25,8 @@
     self.tableView.dataSource = self;
     self.tableView.tableFooterView = [UIView new];
     self.tableView.rowHeight = 55;
-    NSArray *section0Title = @[@"1. 开始推流后不建议频繁在多个应用之间切换", @"2. 个别对mic未处理好的游戏（比如某飞车）在游戏打开的前提下开始推流游戏会没声音，建议先开推流再开游戏"];
     NSArray *section1Title = @[@"1. 插耳机并打开mic →→→ 输出100%麦克风声音+20%的扬声器声音", @"2. 插耳机未打开mic →→→ 输出100%的扬声器声音", @"3. 未插耳机打开mic →→→ 输出100%的mic声音（包含着扬声器中输出到mic的声音）", @"4. 未插耳机未打开mic →→→ 输出100%的扬声器声音"];
-    NSArray *section2Title = @[@"1. 确认rtmp推流地址正确", @"2. 确认给与了应用软件网络、麦克风、相机、通知权限", @"3. 确认推流页已开始计时", @"4. 以上步骤皆已确认无误请联系开发者（qq：924744097"];
+    NSArray *section2Title = @[@"1. 确认rtmp推流地址正确", @"2. 确认给与了应用软件网络、麦克风、相机、通知权限", @"3. 确认推流页已开始计时"];
     _textArray = @[section1Title, section2Title];
 }
 
@@ -38,7 +37,8 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 4;
+    NSArray *titleArray = _textArray[section];
+    return titleArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
